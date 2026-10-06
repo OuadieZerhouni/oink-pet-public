@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  LOCAL BUILDS ONLY. Codemagic does NOT use this file.
+
+  CI generates its own at /Users/builder/export_options.plist as a side effect
+  of `xcode-project use-profiles`, and that is the one `flutter build ipa`
+  consumes. Editing this copy to fix a CI signing problem changes nothing while
+  looking exactly like it should — which is the trap. OuO carried a copy
+  pinning a profile name that CI never read.
+
+  Keep it only for `flutter build ipa` on this machine.
+-->
+<plist version="1.0">
+<dict>
+	<key>method</key>
+	<string>app-store</string>
+	<key>signingStyle</key>
+	<string>automatic</string>
+	<key>uploadSymbols</key>
+	<true/>
+	<key>destination</key>
+	<string>export</string>
+</dict>
+</plist>

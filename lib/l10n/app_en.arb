@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "appTitle": "Oink",
+  "greeting": "Hello!",
+  "@greeting": {
+    "description": "Shown under the logo on first open. Deliberately short — it is the string the RTL layout test measures."
+  },
+  "tapPrompt": "Tap the seed to grow it",
+  "@tapPrompt": {
+    "description": "Instruction for the one interactive element. Kept as a full sentence so the Arabic translation exercises real RTL wrapping rather than a single word."
+  },
+  "grownCount": "{count, plural, =0{Nothing grown yet} =1{Grown once} other{Grown {count} times}}",
+  "@grownCount": {
+    "description": "Exercises ICU plurals in both languages — Arabic has six plural categories, so an app that never tests plurals ships broken Arabic.",
+    "placeholders": { "count": { "type": "int" } }
+  }
+}

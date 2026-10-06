@@ -1,0 +1,7 @@
+{
+  "@@locale": "ar",
+  "appTitle": "قالب التطبيق",
+  "greeting": "مرحبا!",
+  "tapPrompt": "المس البذرة لتنمو",
+  "grownCount": "{count, plural, zero{لم ينمُ شيء بعد} one{نما مرة} two{نما مرتين} few{نما {count} مرات} many{نما {count} مرة} other{نما {count} مرة}}"
+}

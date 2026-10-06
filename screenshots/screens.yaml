@@ -1,0 +1,33 @@
+# GENERATED scaffold — edit freely, this one is yours.
+#
+# What the screenshot pipeline captures and how each slide is captioned.
+# `screenshots.py` drives the simulator to each screen, captures, composes with
+# the caption, resizes to Apple's required sizes, and verifies every output
+# dimension before showing you a review page.
+
+# Apple needs exactly two sizes uploaded; it derives the rest.
+sizes:
+  "6.9": [2868, 1320]   # iPhone 17 Pro Max class
+  "6.5": [2688, 1242]   # legacy required slot
+
+# Capture rules that keep a set looking deliberate rather than assembled:
+#   - one device, one orientation, one theme for the whole set
+#   - clean status bar (the pipeline overrides time and battery)
+#   - the subject centred and identical in scale across slides
+device: "iPhone 17 Pro Max"
+theme: dark
+status_bar: {time: "9:41", battery: 100, cellular: 4, wifi: 3}
+
+slides:
+  - id: hello
+    # How the pipeline reaches this screen. `launch` plus optional taps.
+    route: launch
+    caption:
+      en: "Meet your sprout"
+      ar: "تعرّف على براعمك"
+  - id: grown
+    route: launch
+    taps: [[201, 437]]
+    caption:
+      en: "Tap to watch it grow"
+      ar: "المس لتراها تنمو"

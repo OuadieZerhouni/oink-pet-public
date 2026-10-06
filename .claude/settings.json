@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)", "Bash(find:*)", "Bash(grep:*)", "Bash(rg:*)",
+      "Bash(cat:*)", "Bash(head:*)", "Bash(tail:*)", "Bash(wc:*)",
+      "Bash(sed -n:*)",
+      "Bash(git log:*)", "Bash(git diff:*)", "Bash(git status:*)",
+      "Bash(git show:*)", "Bash(git branch:*)",
+      "Bash(flutter analyze:*)", "Bash(flutter test:*)",
+      "Bash(flutter pub:*)", "Bash(flutter gen-l10n:*)",
+      "Bash(dart format:*)", "Bash(dart analyze:*)",
+      "Bash(sips:*)", "Bash(afinfo:*)", "Bash(plutil -lint:*)",
+      "Bash(xcrun simctl list:*)", "Bash(xcrun simctl io:*)",
+      "Bash(xcrun simctl status_bar:*)",
+      "Bash(pkill -f flutter_tester)"
+    ],
+    "deny": ["Read(~/.config/app-factory/**)"]
+  },
+  "defaultMode": "acceptEdits"
+}
