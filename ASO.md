@@ -96,12 +96,12 @@ Senegal, Mali, Niger, Gambia, Mauritania, Chad, Sierra Leone, Guinea-Bissau, Afg
 
 ## Screenshots (captions, in order)
 
-1. "Your very own baby piglet" — home, piglet with bow, happy
+1. "Your own baby piglet" — home, piglet with bow, happy
 2. "Belly rubs = giggles" — hearts burst over the pig
 3. "Bubble bath time!" — bath mode, sponge and bubbles
 4. "Snack time, yum!" — feed tray open, apple being dragged
 5. "Dress it up" — closet with crown + glasses
-6. "Catch apples, earn acorns" — mini-game mid-run
+6. "Catch apples & acorns" — mini-game mid-run
 
 ## Later (v1.1, only if English shows traction)
 

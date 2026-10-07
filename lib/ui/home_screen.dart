@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../core/app_services.dart';
 import '../core/debug_flags.dart';
+import '../core/marketing_scene.dart';
 import '../core/sfx.dart';
 import '../core/test_env.dart';
 import '../l10n/app_localizations.dart';
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   DateTime _lastSpoke = DateTime.fromMillisecondsSinceEpoch(0);
   double _bathStartClean = 100;
   Offset? _sponge;
+  final _pigKey = GlobalKey();
   bool _rinsing = false;
   bool _dialogOpen = false;
   late AppServices _s;
@@ -97,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // --------------------------------------------------------------- lifecycle
   Future<void> _onFirstFrame() async {
     if (!mounted) return;
+    if (MarketingScene.active) return _runScene();
     final l = context.l10n;
     if (_state.asleep) {
       _say(l.sleepingHint(_state.name), long: true);
@@ -294,6 +297,72 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _mode = _Mode.normal;
       _sponge = null;
     });
+  }
+
+  // ------------------------------------------------------- marketing scenes
+  /// Poses for the store screenshots (see [MarketingScene]); touches go through
+  /// the real gesture pipeline.
+  Future<void> _runScene() async {
+    Future<void> wait(int ms) => Future<void>.delayed(Duration(milliseconds: ms));
+    await wait(500);
+    if (!mounted) return;
+    final l = context.l10n;
+    final box = _pigKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) return;
+    final pig = box.localToGlobal(Offset.zero) & box.size;
+    final screen = MediaQuery.sizeOf(context);
+    final belly = Offset(pig.center.dx, pig.top + pig.height * 0.8);
+    final finger = ScenePointer(900);
+    switch (MarketingScene.id) {
+      case 'love':
+        _say(l.sayGiggle, long: true);
+        finger.down(belly);
+        for (var i = 0; mounted && i < 2000; i++) {
+          await wait(16);
+          finger.move(belly + Offset(34 * math.sin(i / 5), 0));
+          if (i % 120 == 0) _say(l.sayGiggle, long: true);
+        }
+      case 'bath':
+        _startBath();
+        await wait(300);
+        finger.down(belly);
+        for (var i = 0; mounted && i < 2000; i++) {
+          await wait(16);
+          finger.move(belly + Offset(40 * math.sin(i / 9), 14 * math.cos(i / 9)));
+        }
+      case 'feed':
+        _toggleFeed();
+        await wait(700);
+        final apple = Offset(56, screen.height - 97);
+        final mouth = Offset(pig.center.dx, pig.top + pig.height * 0.66);
+        finger.down(apple);
+        for (var i = 1; mounted && i <= 30; i++) {
+          await wait(16);
+          finger.move(Offset.lerp(apple, mouth, 0.78 * i / 30)!);
+        }
+        _say(l.sayHungry, long: true);
+      case 'closet':
+        unawaited(_openCloset());
+      case 'game':
+        unawaited(_play());
+        await wait(900);
+        finger
+          ..down(Offset(screen.width / 2, screen.height * 0.607))
+          ..up();
+        await wait(300);
+        final at = Offset(screen.width / 2, screen.height * 0.87);
+        final drag = ScenePointer(901)..down(at);
+        for (var i = 0; mounted && i < 2000; i++) {
+          await wait(16);
+          drag.move(at + Offset(screen.width * 0.32 * math.sin(i / 40), 0));
+        }
+      default:
+        for (var i = 0; mounted && i < 200; i++) {
+          _say(l.sayHi(_state.name), long: true);
+          if (i.isEven) _pig.react(Reaction.happy);
+          await wait(2000);
+        }
+    }
   }
 
   // ----------------------------------------------------------- dock actions
@@ -597,6 +666,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _pigArea(AppLocalizations l, PetState st, bool asleep) {
     final pigView = PigView(
+      key: _pigKey,
       controller: _pig,
       stage: st.stage,
       needs: st.needs,

@@ -4,6 +4,7 @@ import '../pet/pet_controller.dart';
 import '../pet/pet_state.dart';
 import '../pet/pet_store.dart';
 import 'debug_flags.dart';
+import 'marketing_scene.dart';
 import 'remote_config.dart';
 import 'settings.dart';
 import 'sfx.dart';
@@ -34,7 +35,7 @@ class AppServices {
     if (DebugFlags.resetFirstRun) await store.clear();
     final saved = await store.load(now());
     final pet = PetController(
-      initial: saved ?? PetState.fresh(now()),
+      initial: MarketingScene.active ? MarketingScene.seed(now()) : saved ?? PetState.fresh(now()),
       store: store,
       configSource: () => remote.value,
       clock: now,
