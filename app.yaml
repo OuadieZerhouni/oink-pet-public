@@ -42,3 +42,7 @@ aso:
 
 dev:
   web_port: 0
+
+legal:
+  privacy_url: "https://github.com/OuadieZerhouni/app-configs/blob/main/oink-pet/PRIVACY.md"
+  support_url: "https://github.com/OuadieZerhouni/app-configs/blob/main/oink-pet/SUPPORT.md"
