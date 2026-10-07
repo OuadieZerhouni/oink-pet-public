@@ -3,5 +3,10 @@
     "at": "2026-10-07T14:16:25",
     "done": true,
     "note": "1.0.0 (1) uploaded 2026-10-07 via release_local.py"
+  },
+  "submit": {
+    "at": "2026-10-07T16:51:47",
+    "done": true,
+    "note": "1.0.0 (1) submitted 2026-10-07, WAITING_FOR_REVIEW, release AFTER_APPROVAL"
   }
 }
