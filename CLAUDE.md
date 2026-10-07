@@ -31,8 +31,9 @@ flutter gen-l10n                      # after editing any .arb
 flutter analyze
 flutter test
 flutter test test/pig_preview_dump_test.dart --run-skipped   # render pig/icons to build/preview/
-RENDER_ART=1 flutter test test/tool_render_icon_test.dart    # icon master -> tools/art/icon_1024.png
-python tools/art/export_icons.py                               # every iOS/Android icon size
+python tools/art/export_icons.py icon/icon-1024.png            # every iOS/Android icon size from the master
+# icon/icon-1024.png is the AI-drawn master (since 1.0.1). The old PigPainter render
+# (RENDER_ART=1 … tool_render_icon_test.dart -> tools/art/icon_1024.png) is no longer the icon.
 python tools/audio/synth.py                                    # re-synthesize assets/audio/*.mp3
 ```
 
