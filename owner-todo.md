@@ -48,7 +48,7 @@ knows not to ask again.
 
 **Done when:** App Privacy shows Data Not Collected as published, and availability matches ASO.md
 
-- [ ] GATE-APP-PRIVACY cleared
+- [x] GATE-APP-PRIVACY cleared
 ## GATE-ASA — keyword popularity check (Apple Search Ads, manual)
 
 **Only you can decide:** Search Ads popularity needs your Search Ads login
