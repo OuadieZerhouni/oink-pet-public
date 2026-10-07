@@ -43,14 +43,14 @@ class PetController extends ChangeNotifier {
   PetController({
     required PetState initial,
     required this.store,
-    required RemoteConfig Function() config,
+    required this.configSource,
     DateTime Function()? clock,
   }) : _state = initial,
-       _config = config,
        clock = clock ?? DateTime.now;
 
   final PetStore store;
-  final RemoteConfig Function() _config;
+  /// Reads the live remote config (it can change while the app runs).
+  final RemoteConfig Function() configSource;
   final DateTime Function() clock;
   final _events = StreamController<PetEvent>.broadcast();
   Timer? _saveTimer;
@@ -58,7 +58,7 @@ class PetController extends ChangeNotifier {
   PetState _state;
   PetState get state => _state;
   Stream<PetEvent> get events => _events.stream;
-  RemoteConfig get config => _config();
+  RemoteConfig get config => configSource();
 
   static const _maxPetXpPerDay = 20;
   static const _petActionsPerXp = 5;
@@ -126,7 +126,9 @@ class PetController extends ChangeNotifier {
         stats: _state.stats.copyWith(baths: _state.stats.baths + 1),
       ),
     );
-    _grantXp(startClean < 50 ? 6 : 3);
+    // No XP for washing a pig that was already clean: baths cannot be farmed.
+    final xp = startClean < 50 ? 6 : (startClean < 85 ? 3 : 0);
+    if (xp > 0) _grantXp(xp);
   }
 
   /// A touch on the pig. Fun rises a little; XP trickles in, capped per day.

@@ -21,7 +21,7 @@ PetController makePet({FakeClock? clock, RemoteConfig cfg = RemoteConfig.default
   return PetController(
     initial: initial ?? PetState.fresh(c.now).copyWith(onboarded: true),
     store: PetStore(),
-    config: () => cfg,
+    configSource: () => cfg,
     clock: c.call,
   );
 }

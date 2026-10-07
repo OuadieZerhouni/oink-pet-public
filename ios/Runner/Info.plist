@@ -78,7 +78,6 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
-		<string>ar</string>
 	</array>
 	<!-- ^ From locales.supported. Must list every locale with an .arb file:
 	     OuO declares 10 here while shipping 21, so eleven of its translations

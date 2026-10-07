@@ -15,8 +15,6 @@
 /// rather than a refactor.
 library;
 
-import 'debug_flags.dart';
-
 /// Whether ads may be requested. Implemented for real only when
 /// `features.ads` is on.
 abstract class AdsGate {
@@ -67,11 +65,11 @@ class FeatureGates {
     if (iapGate != null) iap = iapGate;
   }
 
-  /// Debug override is checked *first* so a local build can exercise paid
-  /// paths without a store account.
-  static bool get isPro => DebugFlags.proMode || iap.isPro;
+  /// v1 ships with no ads and no purchases: both gates are the no-op
+  /// implementations, so this is always false and nothing is ever gated.
+  static bool get isPro => iap.isPro;
 
-  static bool get showAds => !DebugFlags.skipAds && !isPro && ads.enabled;
+  static bool get showAds => !isPro && ads.enabled;
 
   /// Whether an ad may interrupt right now.
   static bool get mayInterruptWithAd => showAds && ads.mayShowNow;

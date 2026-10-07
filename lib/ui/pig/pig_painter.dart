@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/rendering.dart';
 
-import '../../pet/catalog.dart';
 import 'accessories.dart';
 import 'pig_pose.dart';
 

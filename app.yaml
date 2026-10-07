@@ -23,7 +23,7 @@ ios:
 
 locales:
   base: en
-  supported: [en, ar]
+  supported: [en]
 
 firebase:
   enabled: false
