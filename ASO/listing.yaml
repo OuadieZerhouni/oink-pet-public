@@ -1,0 +1,100 @@
+# Pulled by `asc.py listing pull`. Edit freely, then `listing push`.
+# Every value is what the App Store shows today; push writes back only
+# what differs, and only to a version that still accepts metadata.
+# Source: ASO.md (applyra-measured 2026-10-06, checked line by line against the v1.0 build).
+# en-GB = identical copy; add the locale in App Store Connect once, then copy this block under en-GB.
+app: 'Oink: Cute Pig Virtual Pet'
+bundle_id: com.ouadieZerhouni.oinkPet
+version: '1.0'
+version_state: PREPARE_FOR_SUBMISSION
+locales:
+  en-US:
+    name: 'Oink: Cute Pig Virtual Pet'
+    subtitle: Baby Piglet Care Simulator
+    privacyPolicyUrl: https://github.com/OuadieZerhouni/app-configs/blob/main/oink-pet/PRIVACY.md
+    description: 'Meet your new best friend: a tiny, round, pink baby piglet who needs YOU.
+
+      Feed it, give it bubble baths, rub its belly and listen to it oink, snort and giggle. Care for it every day and watch it grow from a wobbly piglet into a proud, happy pig.
+
+
+      No ads. No in-app purchases. No account. Just you and your pig.
+
+
+      FEED YOUR PIGLET
+
+      • Drag apples, carrots, corn and sweet treats right to its snout
+
+      • New snacks unlock as your pig grows, from watermelon to cupcakes
+
+      • Your diary remembers its favorite food
+
+
+      BUBBLE BATH TIME
+
+      • Piglets love mud. You love a clean piglet
+
+      • Scrub away the mud with a soapy sponge, then rinse
+
+      • Squeaky clean pigs are the happiest pigs
+
+
+      BELLY RUBS & CUDDLES
+
+      • Pet its head, boop its snout, rub that round little belly
+
+      • Every touch gets a reaction: oinks, snorts, giggles and happy wiggles
+
+      • Its eyes follow your finger
+
+
+      APPLE CATCH
+
+      • A quick mini-game: slide your pig to catch falling apples
+
+      • Golden stars and acorns are worth more. Watch out for bees!
+
+      • Earn acorns to spend in the closet
+
+
+      GOODNIGHT, PIGGY
+
+      • When your pig gets sleepy, turn off the light and let it snore
+
+      • It rests up while you are away
+
+
+      WATCH IT GROW
+
+      • Raise your baby piglet into a grown-up pig, step by step
+
+      • Level up with every feed, bath and cuddle
+
+      • A daily gift of acorns, bigger every day you come back
+
+
+      DRESS IT UP
+
+      • Hats, flower crowns, bows, glasses, scarves and bow ties
+
+      • Five cozy rooms, from a little barn to a snowy winter day
+
+      • Seasonal surprises for Halloween and winter
+
+
+      MADE WITH CARE
+
+      • Free, with no ads and no in-app purchases
+
+      • Works offline
+
+      • No sign-up, no account, no data collected
+
+      • Short, calm sessions: a few happy minutes a day
+
+
+      Whether you love pigs, kawaii animals or cozy virtual pet games, Oink is a small, warm place to come back to every day. Your piglet is waiting. Say hello and hear its first oink!'
+    keywords: game,games,piggy,kawaii,mini,cozy,animal,pets,bath,bubble,feed,grow,outfits,dress,pink,friend,micro
+    promotionalText: Meet your new baby piglet! Feed it, give it bubble baths, rub its round belly and hear it giggle. Care for it every day to grow it up and unlock cute outfits. No ads.
+    whatsNew: null
+    marketingUrl: null
+    supportUrl: https://github.com/OuadieZerhouni/app-configs/blob/main/oink-pet/SUPPORT.md
