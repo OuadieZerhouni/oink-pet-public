@@ -77,7 +77,7 @@ class RemoteConfig {
     this.schemaVersion = 1,
     this.minSupportedVersion = '1.0.0',
     this.latestVersion = '1.0.0',
-    this.updateUrlIos = '',
+    this.updateUrlIos = 'https://apps.apple.com/app/id6820125667',
     this.announcement,
     this.miniGameEnabled = true,
     this.dailyGiftEnabled = true,

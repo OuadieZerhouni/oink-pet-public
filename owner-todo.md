@@ -33,7 +33,7 @@ knows not to ask again.
 
 **Done when:** the app appears in App Store Connect and its Apple ID is in app.yaml
 
-- [ ] GATE-ASC-RECORD cleared
+- [x] GATE-ASC-RECORD cleared
 ## GATE-APP-PRIVACY — declare App Privacy and availability in App Store Connect
 
 **Already verified mechanically:** the app has no analytics, ads, IAP or account; only network call is the public GitHub config JSON

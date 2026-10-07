@@ -5,7 +5,7 @@ app:
   display_name: "Oink"
   slug: oink_pet
   bundle_id: com.ouadieZerhouni.oinkPet
-  app_store_id: ""
+  app_store_id: "6820125667"
 
 features:
   widget: false
