@@ -155,7 +155,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: Text(l.settingsAbout),
                     onTap: () => showAboutDialog(
                       context: context,
-                      applicationName: 'Oink',
+                      applicationName: l.appTitle,
                       applicationVersion: _version,
                       children: [Text(l.settingsNoAds)],
                     ),

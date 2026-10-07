@@ -10,7 +10,7 @@ import 'package:oink_pet/ui/pig/particles.dart';
 
 void main() {
   test('particle field never holds more than its capacity', () {
-    final f = ParticleField(capacity: 90);
+    final f = ParticleField();
     for (var i = 0; i < 500; i++) {
       f.add(Particle(kind: ParticleKind.heart, pos: Offset.zero, vel: Offset.zero, life: 1));
     }

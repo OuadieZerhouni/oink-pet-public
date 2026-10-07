@@ -111,7 +111,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!mounted) return;
     _pet.sync();
     if (_state.asleep) {
-      _sfx.play(Sfx.snore, volume: 0.45, pitch: _pitch);
+      final life = WidgetsBinding.instance.lifecycleState;
+      final visible = (ModalRoute.of(context)?.isCurrent ?? true) && (life == null || life == AppLifecycleState.resumed);
+      if (visible) _sfx.play(Sfx.snore, volume: 0.45, pitch: _pitch);
       return;
     }
     if (_mode != _Mode.normal) return;
@@ -121,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (urgent != null) {
       _say(_needLine(l, urgent));
       if (urgent == Need.tummy || urgent == Need.fun) _sfx.play(Sfx.snort);
-    } else if (_isNight && _state.needs.energy < 70) {
+    } else if (_isNight) {
       _say(l.sayNight);
     } else if (_rng.nextDouble() < 0.35) {
       _say(_rng.nextBool() ? l.sayLove : l.sayOink);
@@ -147,10 +149,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     Stage.big => 0.88 + _rng.nextDouble() * 0.1,
   };
 
-  void _say(String text, {bool long = false}) {
+  void _say(String text, {bool long = false, bool chatter = true}) {
     _bubbleTimer?.cancel();
     setState(() => _bubble = text);
-    _lastSpoke = DateTime.now();
+    if (chatter) _lastSpoke = DateTime.now();
     _bubbleTimer = Timer(Duration(milliseconds: long ? 3600 : 2400), () {
       if (mounted) setState(() => _bubble = null);
     });
@@ -191,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       case PetZone.snout:
         _pig.react(Reaction.oink);
         _sfx.play(Sfx.oink, pitch: _pitch);
-        _say(l.sayOink);
+        _say(l.sayOink, chatter: false);
       case PetZone.head:
         _pig.react(Reaction.happy);
         _sfx.play(_rng.nextDouble() < 0.3 ? Sfx.squealHappy : Sfx.snort, pitch: _pitch);
@@ -211,7 +213,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void _onRub(PetZone zone) {
-    if (_state.asleep || _mode != _Mode.normal) return;
+    if (_state.asleep) {
+      if (_bubble == null) {
+        _pig.react(Reaction.grumble);
+        _sfx.play(Sfx.snort, volume: 0.5, minGap: const Duration(milliseconds: 600));
+        _say(context.l10n.sayGrumble);
+      }
+      return;
+    }
+    if (_mode != _Mode.normal) return;
     _pet.pet(zone);
     _sfx.tick();
     if (zone == PetZone.belly) {
@@ -500,8 +510,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 Positioned(
                   right: 20,
                   top: pigTop + 4,
-                  child: Tooltip(
-                    message: l.wakeMoon,
+                  child: Semantics(
+                    button: true,
+                    label: l.wakeMoon,
+                    excludeSemantics: true,
                     child: GestureDetector(
                       key: const ValueKey('moon'),
                       behavior: HitTestBehavior.opaque,
@@ -645,7 +657,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   Positioned(
                     top: math.max(0, earTop - 62),
                     left: 0,
-                    right: 0,
+                    right: asleep ? 76 : 0, // keep clear of the wake moon
                     child: Center(
                       child: IgnorePointer(child: SpeechBubble(text: _bubble)),
                     ),

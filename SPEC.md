@@ -72,7 +72,7 @@ The pig is drawn procedurally (`PigPainter`), breathes and blinks, and its eyes 
 **Acceptance criteria**
 - [x] Each zone in the table produces its listed reaction and sound.
 - [x] Rubbing the belly back and forth raises Fun.
-- [x] Tapping a sleeping pig makes it grumble ("Five more minutes…"); it stays asleep.
+- [x] Tapping or rubbing a sleeping pig makes it grumble ("Five more minutes…"); it stays asleep.
 - [x] Each reaction gives a light haptic when haptics are on.
 
 ### F4 — Feed
@@ -100,9 +100,9 @@ The pig is drawn procedurally (`PigPainter`), breathes and blinks, and its eyes 
 ### F7 — Sleep
 
 **Acceptance criteria**
-- [x] Sleep dims the lights; the pig sleeps with Zzz and soft snores; Energy refills, including while the app is closed.
+- [x] Sleep dims the lights; the pig sleeps with Zzz and soft snores (only while Home is on screen); Energy refills, including while the app is closed.
 - [x] Tapping the moon (or the dock's Wake button) wakes the pig.
-- [x] Between 22:00 and 07:00 local, an awake pig with Energy below 70 and no urgent need says it is sleepy.
+- [x] Between 22:00 and 07:00 local, an awake pig with no urgent need says it is sleepy.
 
 ### F8 — Needs, XP and acorns (pure Dart, unit-tested)
 
@@ -144,7 +144,7 @@ URL: `https://raw.githubusercontent.com/OuadieZerhouni/app-configs/main/oink-pet
 **Acceptance criteria**
 - [x] 60 fps idle animation with capped particle counts.
 - [x] Sound respects the silent switch (ambient session) and does not stop other audio.
-- [x] Unit, widget and pixel tests cover every system and every user flow; `flutter analyze` is clean and `flutter test` passes.
+- [x] Unit, widget and pixel tests cover every system and the main flows (onboarding, pet, feed, bath, play, sleep, gift, closet, settings); what only a device shows is driven by `/test-drive`; `flutter analyze` is clean and `flutter test` passes.
 
 ## Non-goals
 

@@ -102,6 +102,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final s = RemoteConfigService();
     await s.init();
+    await s.refresh(); // the test binding answers every HTTP request with 400
     expect(s.value.miniGameEnabled, RemoteConfig.defaults.miniGameEnabled);
     expect(s.value.dailyGiftBase, RemoteConfig.defaults.dailyGiftBase);
     expect(s.value.adsEnabled, isFalse);

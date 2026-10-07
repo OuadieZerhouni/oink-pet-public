@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:oink_pet/core/app_services.dart';
 import 'package:oink_pet/main.dart';
 import 'package:oink_pet/core/settings.dart';
+import 'package:oink_pet/core/sfx.dart';
 import 'package:oink_pet/pet/catalog.dart';
 import 'package:oink_pet/pet/needs.dart';
 import 'package:oink_pet/pet/pet_controller.dart';
@@ -255,6 +256,26 @@ void main() {
     expect(find.text('Five more minutes…'), findsOneWidget);
     expect(pet(tester).state.asleep, isTrue);
     await settle(tester, 3000);
+    final g = await tester.startGesture(Offset(box.left + box.width * 0.35, box.top + box.height * 0.78));
+    for (var k = 0; k < 3; k++) {
+      for (var i = 0; i < 6; i++) {
+        await g.moveBy(Offset(k.isEven ? 12 : -12, 0));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+    }
+    await g.up();
+    expect(find.text('Five more minutes…'), findsOneWidget, reason: 'a rub grumbles too');
+    expect(pet(tester).state.asleep, isTrue);
+    svc.sfx.log.clear();
+    await tester.pump(const Duration(seconds: 21));
+    expect(svc.sfx.log, contains(Sfx.snore));
+    await tester.tap(find.byTooltip('Settings'));
+    await settle(tester, 800);
+    svc.sfx.log.clear();
+    await tester.pump(const Duration(seconds: 41));
+    expect(svc.sfx.log, isNot(contains(Sfx.snore)), reason: 'no snoring behind another screen');
+    await tester.pageBack();
+    await settle(tester, 3000);
     await tester.tap(find.byKey(const ValueKey('moon')));
     await settle(tester, 300);
     expect(pet(tester).state.asleep, isFalse);
@@ -311,9 +332,29 @@ void main() {
     expect(reloaded.value.haptics, isFalse);
     await tester.tap(find.text('About Oink'));
     await settle(tester, 500);
+    expect(find.byType(AboutDialog), findsOneWidget);
     expect(find.text('No ads. No purchases. Just a piglet.'), findsWidgets);
     await tester.tap(find.text('Close'));
     await settle(tester, 500);
+    await teardown(tester);
+  });
+
+  testWidgets('small phone + large text, asleep: the wake moon never covers the speech bubble', (tester) async {
+    tester.view.physicalSize = const Size(320 * 2, 568 * 2);
+    tester.view.devicePixelRatio = 2;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+    addTearDown(() {
+      tester.view.reset();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+    });
+    svc = makeServices(asleep: true);
+    await tester.pumpWidget(OinkApp(servicesFuture: Future.value(svc)));
+    await tester.pump();
+    await settle(tester, 600);
+    expectNoException(tester);
+    final moon = tester.getRect(find.byKey(const ValueKey('moon')));
+    final bubble = tester.getRect(find.textContaining('sleeping'));
+    expect(moon.overlaps(bubble), isFalse, reason: 'moon $moon vs bubble $bubble');
     await teardown(tester);
   });
 }
