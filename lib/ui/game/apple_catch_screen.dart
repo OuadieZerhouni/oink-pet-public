@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -55,7 +56,10 @@ class _AppleCatchScreenState extends State<AppleCatchScreen> with SingleTickerPr
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (_phase != _Phase.playing) return;
+    // Pause while a call, Control Center or the app switcher covers the game.
+    // (Web previews report focus loss as "inactive" with no reliable resume,
+    // so the pause is device-only.)
+    if (_phase != _Phase.playing || kIsWeb) return;
     if (state == AppLifecycleState.resumed) {
       _last = Duration.zero;
       if (!_ticker.isActive) _ticker.start();
@@ -132,6 +136,8 @@ class _AppleCatchScreenState extends State<AppleCatchScreen> with SingleTickerPr
             onPanDown: (d) => _moveTo(d.localPosition.dx, size.width),
             onPanUpdate: (d) => _moveTo(d.localPosition.dx, size.width),
             child: Stack(
+              // Every layer is positioned: a non-positioned HUD would shrink
+              // the whole stack to its own height once the cards are gone.
               children: [
                 Positioned.fill(child: CustomPaint(painter: RoomPainter('meadow', floorY: 0.9))),
                 Positioned.fill(
@@ -139,69 +145,99 @@ class _AppleCatchScreenState extends State<AppleCatchScreen> with SingleTickerPr
                     painter: _GamePainter(this, st.stage, st.equipped[Slot.hat], st.equipped[Slot.glasses], st.equipped[Slot.neck]),
                   ),
                 ),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: ValueListenableBuilder<int>(
-                      valueListenable: _repaint,
-                      builder: (context, _, _) => Row(
-                        children: [
-                          IconButton(
-                            tooltip: l.close,
-                            style: IconButton.styleFrom(backgroundColor: Colors.white),
-                            onPressed: () {
-                              if (_phase == _Phase.playing) {
-                                _ticker.stop();
-                                _finish();
-                              } else {
-                                Navigator.pop(context);
-                              }
-                            },
-                            icon: const Icon(Icons.close_rounded, color: AppColors.inkSoft),
-                          ),
-                          const SizedBox(width: 8),
-                          for (var i = 0; i < AppleCatchGame.maxHearts; i++)
-                            Padding(
-                              padding: const EdgeInsets.only(right: 2),
-                              child: Icon(Icons.favorite_rounded, size: 26, color: i < _game.hearts ? AppColors.pinkDeep : Colors.white70),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: ValueListenableBuilder<int>(
+                        valueListenable: _repaint,
+                        builder: (context, _, _) => Row(
+                          children: [
+                            IconButton(
+                              tooltip: l.close,
+                              style: IconButton.styleFrom(backgroundColor: Colors.white),
+                              onPressed: () {
+                                if (_phase == _Phase.playing) {
+                                  _ticker.stop();
+                                  _finish();
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              icon: const Icon(Icons.close_rounded, color: AppColors.inkSoft),
                             ),
-                          const Spacer(),
-                          SoftCard(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                            radius: 18,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text('🍎', style: TextStyle(fontSize: 18)),
-                                const SizedBox(width: 6),
-                                Text('${_game.score}', style: const TextStyle(fontFamily: 'Fredoka', fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.ink)),
-                                const SizedBox(width: 14),
-                                const Icon(Icons.timer_rounded, size: 18, color: AppColors.inkSoft),
-                                const SizedBox(width: 4),
-                                Text('${_game.timeLeft.ceil()}', style: const TextStyle(fontFamily: 'Fredoka', fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.ink)),
-                              ],
+                            const SizedBox(width: 8),
+                            for (var i = 0; i < AppleCatchGame.maxHearts; i++)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 2),
+                                child: Icon(
+                                  Icons.favorite_rounded,
+                                  size: 26,
+                                  color: i < _game.hearts ? AppColors.pinkDeep : Colors.white70,
+                                ),
+                              ),
+                            const Spacer(),
+                            SoftCard(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                              radius: 18,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text('🍎', style: TextStyle(fontSize: 18)),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '${_game.score}',
+                                    style: const TextStyle(
+                                      fontFamily: 'Fredoka',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.ink,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  const Icon(Icons.timer_rounded, size: 18, color: AppColors.inkSoft),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${_game.timeLeft.ceil()}',
+                                    style: const TextStyle(
+                                      fontFamily: 'Fredoka',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.ink,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-                if (_phase == _Phase.ready) _ReadyCard(name: st.name, best: st.stats.bestScore, onStart: _start),
+                if (_phase == _Phase.ready)
+                  Positioned.fill(
+                    child: _ReadyCard(name: st.name, best: st.stats.bestScore, onStart: _start),
+                  ),
                 if (_phase == _Phase.over)
-                  _ResultCard(
-                    score: _game.score,
-                    best: s.pet.state.stats.bestScore,
-                    newBest: _newBest,
-                    earned: _earned,
-                    onAgain: () {
-                      if (s.pet.state.needs.energy < 15) {
-                        Navigator.pop(context);
-                        return;
-                      }
-                      _start();
-                    },
-                    onBack: () => Navigator.pop(context),
+                  Positioned.fill(
+                    child: _ResultCard(
+                      score: _game.score,
+                      best: s.pet.state.stats.bestScore,
+                      newBest: _newBest,
+                      earned: _earned,
+                      onAgain: () {
+                        if (s.pet.state.needs.energy < 15) {
+                          Navigator.pop(context);
+                          return;
+                        }
+                        _start();
+                      },
+                      onBack: () => Navigator.pop(context),
+                    ),
                   ),
               ],
             ),
@@ -221,7 +257,16 @@ class _GamePainter extends CustomPainter {
 
   TextPainter _tp(String e, double size) {
     final key = '$e@${size.round()}';
-    return _emoji.putIfAbsent(key, () => TextPainter(text: TextSpan(text: e, style: TextStyle(fontSize: size)), textDirection: TextDirection.ltr)..layout());
+    return _emoji.putIfAbsent(
+      key,
+      () => TextPainter(
+        text: TextSpan(
+          text: e,
+          style: TextStyle(fontSize: size),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(),
+    );
   }
 
   @override
@@ -285,7 +330,10 @@ class _ReadyCard extends StatelessWidget {
               Text(l.gameHow(name), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
               if (best > 0) ...[const SizedBox(height: 8), Text(l.gameBest(best), style: Theme.of(context).textTheme.bodySmall)],
               const SizedBox(height: 18),
-              SizedBox(width: double.infinity, child: FilledButton(onPressed: onStart, child: Text(l.gameStart))),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(onPressed: onStart, child: Text(l.gameStart)),
+              ),
             ],
           ),
         ),
@@ -295,7 +343,14 @@ class _ReadyCard extends StatelessWidget {
 }
 
 class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.score, required this.best, required this.newBest, required this.earned, required this.onAgain, required this.onBack});
+  const _ResultCard({
+    required this.score,
+    required this.best,
+    required this.newBest,
+    required this.earned,
+    required this.onAgain,
+    required this.onBack,
+  });
   final int score, best, earned;
   final bool newBest;
   final VoidCallback onAgain, onBack;
@@ -315,7 +370,10 @@ class _ResultCard extends StatelessWidget {
           children: [
             Text(newBest ? l.gameNewBest : l.gameOver, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
             const SizedBox(height: 10),
-            Text('🍎 $score', style: const TextStyle(fontFamily: 'Fredoka', fontSize: 44, fontWeight: FontWeight.w600, color: AppColors.pinkDeep)),
+            Text(
+              '🍎 $score',
+              style: const TextStyle(fontFamily: 'Fredoka', fontSize: 44, fontWeight: FontWeight.w600, color: AppColors.pinkDeep),
+            ),
             Text(l.gameBest(best), style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),
             Row(
@@ -323,11 +381,17 @@ class _ResultCard extends StatelessWidget {
               children: [
                 const AcornIcon(size: 26),
                 const SizedBox(width: 6),
-                Text(l.gameEarned(earned), style: const TextStyle(fontFamily: 'Fredoka', fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.acorn)),
+                Text(
+                  l.gameEarned(earned),
+                  style: const TextStyle(fontFamily: 'Fredoka', fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.acorn),
+                ),
               ],
             ),
             const SizedBox(height: 18),
-            SizedBox(width: double.infinity, child: FilledButton(onPressed: onAgain, child: Text(l.gameAgain))),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(onPressed: onAgain, child: Text(l.gameAgain)),
+            ),
             TextButton(onPressed: onBack, child: Text(l.gameBack)),
           ],
         ),

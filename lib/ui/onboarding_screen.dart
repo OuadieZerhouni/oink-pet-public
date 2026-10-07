@@ -62,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 // Pig stage
                 Expanded(
-                  flex: compact ? 4 : 5,
+                  flex: compact ? 4 : 6,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(40, 12, 40, 0),
                     child: Stack(
@@ -88,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 // Card
                 Expanded(
-                  flex: compact ? 6 : 5,
+                  flex: compact ? 6 : 4,
                   child: Container(
                     width: double.infinity,
                     decoration: const BoxDecoration(

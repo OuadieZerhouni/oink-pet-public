@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../core/app_services.dart';
@@ -271,21 +273,33 @@ class ItemThumbPainter extends CustomPainter {
   @override
   void paint(Canvas c, Size s) {
     final w = s.width, h = s.height;
+    c.save();
+    c.clipRect(Offset.zero & s);
+    const skin = Color(0xFFFFD3DF);
     switch (item.slot) {
       case Slot.room:
-        RoomPainter(item.id, floorY: 0.7).paint(c, s);
+        // Paint the room at phone scale, then shrink it, so props keep the
+        // proportions they have on the home screen.
+        const virtualWidth = 390.0;
+        final k = w / virtualWidth;
+        c.scale(k, k);
+        RoomPainter(item.id, floorY: 0.72).paint(c, Size(virtualWidth, h / k));
       case Slot.hat:
-        c.drawCircle(Offset(w / 2, h * 1.05), w * 0.42, Paint()..color = const Color(0xFFFFE1EA));
-        final r = (w < h ? w : h) * 0.3;
-        drawHat(c, item.id, Offset(w / 2, h * 0.7), r);
+        // A pink "head top" for the hat to sit on.
+        final r = math.min(w, h) * 0.5;
+        final domeTop = h * 0.66;
+        c.drawCircle(Offset(w / 2, domeTop + r * 1.15), r * 1.15, Paint()..color = skin);
+        drawHat(c, item.id, Offset(w / 2, domeTop + r * 0.1), r);
       case Slot.glasses:
-        c.drawCircle(Offset(w / 2, h / 2), w * 0.4, Paint()..color = const Color(0xFFFFE1EA));
-        final r = w * 0.55;
-        drawGlasses(c, item.id, Offset(w / 2 - r * 0.42, h / 2), Offset(w / 2 + r * 0.42, h / 2), r);
+        final r = w * 0.62;
+        c.drawCircle(Offset(w / 2, h * 0.55), math.min(w, h) * 0.46, Paint()..color = skin);
+        drawGlasses(c, item.id, Offset(w / 2 - r * 0.42, h * 0.5), Offset(w / 2 + r * 0.42, h * 0.5), r);
       case Slot.neck:
-        c.drawCircle(Offset(w / 2, h * 0.45), w * 0.4, Paint()..color = const Color(0xFFFFE1EA));
-        drawNeck(c, item.id, Offset(w / 2, h * 0.38), w * 0.5);
+        final r = w * 0.62;
+        c.drawCircle(Offset(w / 2, -h * 0.05), math.min(w, h) * 0.55, Paint()..color = skin);
+        drawNeck(c, item.id, Offset(w / 2, h * 0.36), r);
     }
+    c.restore();
   }
 
   @override

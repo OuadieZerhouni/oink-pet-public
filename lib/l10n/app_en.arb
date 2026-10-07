@@ -84,7 +84,7 @@
   "@grewUpBig": { "placeholders": { "name": { "type": "String" } } },
 
   "gameTitle": "Apple Catch",
-  "gameHow": "Slide {name} to catch apples. Golden apples are worth more. Watch out for bees!",
+  "gameHow": "Slide {name} to catch apples. Stars and acorns are worth more. Watch out for bees!",
   "@gameHow": { "placeholders": { "name": { "type": "String" } } },
   "gameStart": "Start",
   "gameOver": "Great catching!",

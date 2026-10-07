@@ -463,7 +463,7 @@ abstract class AppLocalizations {
   /// No description provided for @gameHow.
   ///
   /// In en, this message translates to:
-  /// **'Slide {name} to catch apples. Golden apples are worth more. Watch out for bees!'**
+  /// **'Slide {name} to catch apples. Stars and acorns are worth more. Watch out for bees!'**
   String gameHow(String name);
 
   /// No description provided for @gameStart.

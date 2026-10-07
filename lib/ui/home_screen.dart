@@ -20,6 +20,7 @@ import 'closet_screen.dart';
 import 'game/apple_catch_screen.dart';
 import 'names.dart';
 import 'pig/particles.dart';
+import 'pig/pig_pose.dart';
 import 'pig/pig_view.dart';
 import 'room_painter.dart';
 import 'settings_screen.dart';
@@ -226,7 +227,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _sfx.play(Sfx.munch);
         _sfx.bump();
         _pig.react(Reaction.munch);
-        _pig.burst(ParticleKind.crumb, count: 6);
         Future<void>.delayed(const Duration(milliseconds: 1000), () {
           if (!mounted) return;
           _sfx.play(Sfx.gulp);
@@ -595,11 +595,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
           ),
         ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Center(child: IgnorePointer(child: SpeechBubble(text: _bubble))),
+        // Speech bubble sits just above the pig's ears, wherever the pig is.
+        Positioned.fill(
+          child: LayoutBuilder(
+            builder: (context, box) {
+              final geo = PigGeometry.forStage(st.stage);
+              final w = box.maxWidth - 48, h = box.maxHeight - 46;
+              final scale = math.min(w / PigGeometry.designSize.width, h / PigGeometry.designSize.height);
+              final pigTop = 46 + (h - PigGeometry.designSize.height * scale);
+              final earTop = pigTop + (geo.headC.dy - geo.headR * 1.5) * scale;
+              return Stack(
+                children: [
+                  Positioned(
+                    top: math.max(0, earTop - 62),
+                    left: 0,
+                    right: 0,
+                    child: Center(child: IgnorePointer(child: SpeechBubble(text: _bubble))),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
         if (_pet.giftAvailable && !asleep && _mode == _Mode.normal)
           Positioned(right: 16, top: 52, child: _GiftButton(tooltip: l.giftTooltip, onTap: _claimGift)),

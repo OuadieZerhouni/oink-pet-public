@@ -59,7 +59,7 @@ class RoomPainter extends CustomPainter {
       c.drawLine(Offset(x, 0), Offset(x, floor), plank);
     }
     // Window with sky
-    final win = Rect.fromCenter(center: Offset(s.width * 0.78, s.height * 0.2), width: s.width * 0.26, height: s.width * 0.22);
+    final win = Rect.fromCenter(center: Offset(s.width * 0.8, floor * 0.5), width: s.width * 0.26, height: s.width * 0.22);
     c.drawRRect(RRect.fromRectAndRadius(win.inflate(8), const Radius.circular(14)), _f(const Color(0xFFC98E5D)));
     c.drawRRect(RRect.fromRectAndRadius(win, const Radius.circular(10)), _f(const Color(0xFFBFE6FF)));
     _cloud(c, win.center + Offset(-win.width * 0.25, win.height * 0.05), win.width * 0.5);
@@ -128,14 +128,15 @@ class RoomPainter extends CustomPainter {
       }
     }
     // Round window with moon
-    final w = Offset(s.width * 0.2, s.height * 0.18);
+    final w = Offset(s.width * 0.18, floor * 0.48);
     c.drawCircle(w, s.width * 0.13, _f(const Color(0xFFE7B4C6)));
     c.drawCircle(w, s.width * 0.11, _f(const Color(0xFF8FB8F0)));
     c.drawCircle(w + Offset(s.width * 0.03, -s.width * 0.02), s.width * 0.04, _f(const Color(0xFFFFF3B0)));
     // Shelf with plush
-    c.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(s.width * 0.6, s.height * 0.26, s.width * 0.32, 10), const Radius.circular(5)), _f(const Color(0xFFD9A3B6)));
-    c.drawCircle(Offset(s.width * 0.68, s.height * 0.26 - 16), 16, _f(const Color(0xFFFFF0B3)));
-    c.drawCircle(Offset(s.width * 0.82, s.height * 0.26 - 13), 13, _f(const Color(0xFFB9E4C9)));
+    final shelfY = floor * 0.56;
+    c.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(s.width * 0.62, shelfY, s.width * 0.32, 10), const Radius.circular(5)), _f(const Color(0xFFD9A3B6)));
+    c.drawCircle(Offset(s.width * 0.7, shelfY - 16), 16, _f(const Color(0xFFFFF0B3)));
+    c.drawCircle(Offset(s.width * 0.84, shelfY - 13), 13, _f(const Color(0xFFB9E4C9)));
     // Floor + rug
     c.drawRect(Rect.fromLTWH(0, floor, s.width, s.height - floor), _f(const Color(0xFFE9C9B0)));
     c.drawOval(Rect.fromCenter(center: Offset(s.width / 2, floor + (s.height - floor) * 0.45), width: s.width * 0.8, height: (s.height - floor) * 0.6), _f(const Color(0xFFC9B8F2)));

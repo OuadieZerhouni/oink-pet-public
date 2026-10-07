@@ -227,7 +227,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String gameHow(String name) {
-    return 'Slide $name to catch apples. Golden apples are worth more. Watch out for bees!';
+    return 'Slide $name to catch apples. Stars and acorns are worth more. Watch out for bees!';
   }
 
   @override
