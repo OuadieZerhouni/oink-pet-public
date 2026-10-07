@@ -30,7 +30,10 @@ flutter pub get
 flutter gen-l10n                      # after editing any .arb
 flutter analyze
 flutter test
-flutter test test/preview_dump_test.dart --run-skipped   # render visuals to look at
+flutter test test/pig_preview_dump_test.dart --run-skipped   # render pig/icons to build/preview/
+RENDER_ART=1 flutter test test/tool_render_icon_test.dart    # icon master -> tools/art/icon_1024.png
+python tools/art/export_icons.py                               # every iOS/Android icon size
+python tools/audio/synth.py                                    # re-synthesize assets/audio/*.mp3
 ```
 
 If `flutter test` produces **no output at all**, stale testers are holding
@@ -38,35 +41,35 @@ locks: `pkill -f flutter_tester`, then re-run. That is not a hang in your code.
 
 ## Architecture
 
+Product spec: `SPEC.md`. Listing: `ASO.md`. Remote config schema: `docs/REMOTE_CONFIG.md`. Owner gates: `owner-todo.md`.
+
 | Path | Role |
 | --- | --- |
-| `lib/core/test_env.dart` | The **only** correct `FLUTTER_TEST` check. Read its doc before writing any test guard. |
-| `lib/core/debug_flags.dart` | Every `--dart-define` seam, in one place. Each feature ships an inspector and an injector. |
-| `lib/core/feature_gates.dart` | The single answer to "what is unlocked". Ads/IAP are interfaces, no-op unless the feature is on. |
-| `lib/l10n/` | `.arb` per locale, generated from `app.yaml`. Edit the base locale only; translation is a batched pass. |
-| `lib/ui/seed_sprout.dart` | The custom-painted element the pixel test measures. Replace with your app's real one. |
+| `lib/pet/` | Pure-Dart domain: `needs.dart` (decay), `catalog.dart` (foods, cosmetics, economy, stages), `pet_state.dart` (tolerant JSON), `pet_store.dart`, `pet_controller.dart` (every rule; ChangeNotifier; debounced save). No widget code. |
+| `lib/core/remote_config.dart` | GitHub-hosted JSON config: cached, defaults-first, clamped. No Firebase. |
+| `lib/core/sfx.dart` | flutter_soloud player (ambient audio session) + haptics. No-op on web and in tests. |
+| `lib/core/app_services.dart` | Builds settings, config, pet and sfx once; `AppScope` hands them down. |
+| `lib/core/test_env.dart` | The **only** correct `FLUTTER_TEST` check. |
+| `lib/core/debug_flags.dart` | `--dart-define` seams (reset first run, inspector, clock offset). |
+| `lib/ui/pig/` | The pig: `PigPainter` (procedural, 300x400 design space), `PigView` (ticker animation, touch zones, rubs), accessories, particles. |
+| `lib/ui/room_painter.dart`, `art_icons.dart` | Painted rooms and item icons: no emoji, no bitmaps. |
+| `lib/ui/home_screen.dart` | Main loop: meters, feed tray (drag), bath (scrub + rinse), sleep, gift, chatter, dialogs. |
+| `lib/ui/game/` | Apple Catch: pure seeded logic (`apple_catch_logic.dart`, tested) + screen. |
+| `lib/l10n/` | English only in v1. Edit `app_en.arb`, then `gen-l10n`. |
 
-## The six exemplar tests
+## Tests
 
-Each documents a trap in its header — read the header before changing the test.
-
-1. `no_wrong_test_guard_test.dart` — greps `lib/` for the always-false
-   `bool.fromEnvironment('FLUTTER_TEST')`. Source-grep guards are the answer
-   whenever the failure mode is *silence*.
-2. `pixel_visibility_test.dart` — asserts a visual change is visibly different,
-   in pixels, at the size it actually renders. State reaching a painter is not
-   the same as a user seeing anything.
-3. `preview_dump_test.dart` — dev tool, skipped by default. Documents the
-   fake-async `Picture.toImage` hang and the `tester.runAsync` way out.
-4. `rtl_layout_test.dart` — Arabic renders RTL and its plural categories
-   resolve. RTL is tested from the first commit or discovered late.
-5. `manifest_sync_test.dart` — generated files still agree with `app.yaml`.
-6. Add one config test per remote-config section as they appear.
+- `pet_logic_test.dart`: every economy/needs/levelling rule, with a fake clock.
+- `app_flow_test.dart`: the real widget tree. Onboarding, snout tap, feed drag, bath, sleep, gift, closet buy, start over, and
+  a 320x568 phone at 1.6x text scale. Home runs periodic timers: pump durations, never `pumpAndSettle`.
+- `game_test.dart`, `remote_config_test.dart` (published JSON == code defaults), `pixel_visibility_test.dart`,
+  `manifest_sync_test.dart`, `no_wrong_test_guard_test.dart`.
+- Dev tools, skipped by default: `pig_preview_dump_test.dart`, `tool_render_icon_test.dart` (use `tester.runAsync` for `toImage`).
 
 ## Working rules
 
-- User-facing strings: edit the base-locale `.arb` only, then `gen-l10n`. Other
-  locales are a separate batched translation pass.
+- User-facing strings: edit `app_en.arb`, then `gen-l10n`. No Arabic/Turkish/Indonesian/Malay locale, ever (see `ASO.md`).
+- No ads, no IAP, no analytics in v1. `ads.enabled` in the config is reserved and must stay unread by code.
 - Keep changes scoped to what was asked; do not refactor adjacent code in passing.
 - Run `flutter analyze` after Dart changes and report anything remaining.
 - Verify timer-driven behaviour by **reading logs**, not by screenshotting. A

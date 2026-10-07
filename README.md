@@ -1,17 +1,17 @@
-# oink_pet
+# Oink
 
-A new Flutter project.
+A kawaii baby-pig virtual pet for iPhone. Feed it by dragging snacks to its snout, give it bubble baths, rub its belly,
+tuck it in, play Apple Catch for acorns, and spend them on hats, glasses and rooms. It grows from piglet to big pig as you care
+for it. No ads, no in-app purchases, no account; works offline.
 
-## Getting Started
+- Flutter 3.44 / Dart 3.12, iOS-first, iPhone portrait. Everything is drawn in code (pig, rooms, icons); sounds are synthesized
+  (`tools/audio/synth.py`).
+- Remote config: a public JSON on GitHub (`docs/REMOTE_CONFIG.md`).
+- Store listing: `ASO.md`. What is left for the owner (accounts, device check, store page): `owner-todo.md`.
+- Product spec: `SPEC.md`. Working notes for Claude Code: `CLAUDE.md`.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get && flutter gen-l10n
+flutter analyze && flutter test
+flutter run
+```

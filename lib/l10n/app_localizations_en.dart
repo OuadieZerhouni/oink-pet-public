@@ -418,6 +418,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
+  String get learnMore => 'Learn more';
+
+  @override
   String get foodApple => 'Apple';
 
   @override

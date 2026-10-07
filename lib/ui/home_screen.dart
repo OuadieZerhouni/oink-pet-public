@@ -448,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               if (ann.url.isNotEmpty)
                 TextButton(
                   onPressed: () => launchUrl(Uri.parse(ann.url), mode: LaunchMode.externalApplication),
-                  child: const Text('↗'),
+                  child: Text(l.learnMore),
                 ),
               FilledButton(onPressed: () => Navigator.pop(ctx), child: Text(l.ok)),
             ],

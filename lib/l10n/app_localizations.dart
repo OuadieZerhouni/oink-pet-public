@@ -778,6 +778,12 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get ok;
 
+  /// No description provided for @learnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get learnMore;
+
   /// No description provided for @foodApple.
   ///
   /// In en, this message translates to:
