@@ -60,7 +60,7 @@ knows not to ask again.
 
 **Done when:** popularity numbers are noted in ASO.md
 
-- [ ] GATE-ASA cleared
+- [x] GATE-ASA cleared
 
 <!-- last updated 2026-10-07 12:43 -->
 

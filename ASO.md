@@ -103,6 +103,38 @@ Senegal, Mali, Niger, Gambia, Mauritania, Chad, Sierra Leone, Guinea-Bissau, Afg
 5. "Dress it up" — closet with crown + glasses
 6. "Catch apples & acorns" — mini-game mid-run
 
+## Keyword check — Applyra, 2026-10-07 (after submission of 1.0.0)
+
+Applyra Keywords Inspector, measured the day 1.0.0 went to review. These are Applyra's estimates (not Apple Search Ads
+popularity). Autocomplete = where the store suggests the term; Market = ratings on a typical top-ranking app.
+
+| Keyword | Store | Difficulty | Traffic | KEI | Competitor strength | Autocomplete | Market | Where it is in our listing |
+|---|---|---|---|---|---|---|---|---|
+| oink | US | Medium | **High** | 1.60 | 64 | 96 (3 chars, #1) | 26 (~38 ratings) | name |
+| oink | GB | Easy | **High** | 2.53 | 22 | 76 (3 chars, #3) | 14 (~6) | name |
+| piglet | US | Medium | **High** | 1.51 | 15 | 74 (4 chars, #2) | 24 (~27) | subtitle |
+| piglet | GB | Medium | **High** | 1.49 | 11 | 70 (4 chars, #1) | 23 (~23) | subtitle |
+| cute pig | US | Easy | Medium | 1.32 | 23 | 33 | 30 (~60) | name |
+| cute pig | GB | Easy | Medium | 1.84 | 25 | 46 | 26 (~34) | name |
+| pig simulator | US | Easy | Medium | 1.39 | 38 | 39 | 42 (~328) | name + subtitle |
+| pig game | US | Medium | Medium | 1.24 | 55 | 56 (4 chars, #1) | 53 (~1k) | name + keywords |
+| oink oink | US | Medium | Medium | 1.16 | 35 | 50 | 20 (~14) | name (one word) |
+| pet games | US | Medium | Medium | 1.05 | **85** | 59 | 74 (~27k) | name + keywords |
+| cute pet | US | Medium | Medium | 0.62 | 41 | 38 | 67 (~11k) | name; OuO cute pet ranks #23 |
+| virtual pig | US | Easy | Low | 0.27 | 42 | 0 (not suggested) | 48 (~791) | name |
+
+**Verdict: the shipped listing is aimed right.** The two highest-demand terms, `oink` and `piglet`, are in the name
+and subtitle, and both have weak competition. The only pig *pet* apps ranking on them are "OiNK - Raise a Cute Pig"
+(0 ratings, 2024) and "Piglet Garden" (134 ratings). On the old GATE-ASA bar (oink strong, cute pig decent), both pass.
+`pet games` / `cute pet` are long-term: their top apps hold 11k–27k ratings.
+
+**Watch:** "My Virtual Pet Pig **Oinky**" (221 ratings, 2014) ranks #2 for `virtual pig`. `Oinky` is our default pig
+name and is visible in screenshots 1–4. It is not in the name, subtitle or keywords, but for 1.0.1 re-shoot the
+screenshots with another name (the scene seed's `name`), so no competitor brand appears in store art.
+
+**For 1.0.1 (keywords are locked while 1.0.0 is in review):** the field carries both `game` and `games`; Apple
+matches plurals, so drop `games` and spend the 6 characters on an untested term, then re-inspect.
+
 ## Later (v1.1, only if English shows traction)
 
 ja (`豚育成` T78/D30) and ko (`돼지 게임` T89/D29) listings are drafted in the research file §4.2. Both need a native-speaker read.
