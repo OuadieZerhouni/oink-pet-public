@@ -110,7 +110,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void _onTick() {
     if (!mounted) return;
     _pet.sync();
-    if (_mode != _Mode.normal || _state.asleep) return;
+    if (_state.asleep) {
+      _sfx.play(Sfx.snore, volume: 0.45, pitch: _pitch);
+      return;
+    }
+    if (_mode != _Mode.normal) return;
     if (DateTime.now().difference(_lastSpoke) < const Duration(seconds: 25)) return;
     final l = context.l10n;
     final urgent = _state.needs.mostUrgent;
@@ -187,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       case PetZone.snout:
         _pig.react(Reaction.oink);
         _sfx.play(Sfx.oink, pitch: _pitch);
-        if (_rng.nextDouble() < 0.4) _say(l.sayOink);
+        _say(l.sayOink);
       case PetZone.head:
         _pig.react(Reaction.happy);
         _sfx.play(_rng.nextDouble() < 0.3 ? Sfx.squealHappy : Sfx.snort, pitch: _pitch);
@@ -492,6 +496,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
               // Pig area
               Positioned(left: 0, right: 0, top: pigTop, height: pigH, child: _pigArea(l, st, asleep)),
+              if (asleep)
+                Positioned(
+                  right: 20,
+                  top: pigTop + 4,
+                  child: Tooltip(
+                    message: l.wakeMoon,
+                    child: GestureDetector(
+                      key: const ValueKey('moon'),
+                      behavior: HitTestBehavior.opaque,
+                      onTap: _toggleSleep,
+                      child: const Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Icon(Icons.nightlight_round, size: 44, color: Color(0xFFFFF3B0)),
+                      ),
+                    ),
+                  ),
+                ),
               // Top bar + meters
               Positioned(
                 left: 0,

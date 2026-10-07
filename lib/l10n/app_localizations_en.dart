@@ -128,6 +128,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sayOink => 'Oink!';
 
   @override
+  String get wakeMoon => 'Tap the moon to wake up';
+
+  @override
   String get sayOinkQ => 'Oink?';
 
   @override
@@ -336,6 +339,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSupport => 'Help & support';
+
+  @override
+  String get settingsAbout => 'About Oink';
 
   @override
   String settingsVersion(String version) {

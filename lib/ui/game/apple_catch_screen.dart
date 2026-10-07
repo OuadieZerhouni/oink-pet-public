@@ -30,7 +30,7 @@ class AppleCatchScreen extends StatefulWidget {
 enum _Phase { ready, playing, over }
 
 class _AppleCatchScreenState extends State<AppleCatchScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late final Ticker _ticker = createTicker(_onTick);
+  late final Ticker _ticker;
   late AppleCatchGame _game;
   _Phase _phase = _Phase.ready;
   Duration _last = Duration.zero;
@@ -44,6 +44,7 @@ class _AppleCatchScreenState extends State<AppleCatchScreen> with SingleTickerPr
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _ticker = createTicker(_onTick);
     _game = AppleCatchGame(seed: widget.seed);
   }
 

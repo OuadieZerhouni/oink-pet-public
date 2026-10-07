@@ -316,6 +316,12 @@ abstract class AppLocalizations {
   /// **'Oink!'**
   String get sayOink;
 
+  /// No description provided for @wakeMoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the moon to wake up'**
+  String get wakeMoon;
+
   /// No description provided for @sayOinkQ.
   ///
   /// In en, this message translates to:
@@ -651,6 +657,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & support'**
   String get settingsSupport;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About Oink'**
+  String get settingsAbout;
 
   /// No description provided for @settingsVersion.
   ///

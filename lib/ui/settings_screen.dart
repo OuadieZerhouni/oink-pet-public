@@ -150,6 +150,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     trailing: const Icon(Icons.open_in_new_rounded, size: 18),
                     onTap: () => _open(s.remote.value.privacyUrl),
                   ),
+                  ListTile(
+                    leading: const Icon(Icons.info_outline_rounded, color: AppColors.pinkDeep),
+                    title: Text(l.settingsAbout),
+                    onTap: () => showAboutDialog(
+                      context: context,
+                      applicationName: 'Oink',
+                      applicationVersion: _version,
+                      children: [Text(l.settingsNoAds)],
+                    ),
+                  ),
                 ],
               ),
             ),

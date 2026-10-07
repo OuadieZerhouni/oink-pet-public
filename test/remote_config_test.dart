@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:oink_pet/core/remote_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// One test per config section (CLAUDE.md rule 6). The published file in
 /// `config/config.json` must parse to exactly the code defaults, so pushing
 /// it can never change behaviour by accident.
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   test('the published config parses and matches the code defaults', () {
     final j = jsonDecode(File('config/config.json').readAsStringSync()) as Map<String, dynamic>;
     final c = RemoteConfig.fromJson(j);
@@ -23,6 +25,11 @@ void main() {
     expect(c.reviewMinLevel, d.reviewMinLevel);
     expect(c.privacyUrl, d.privacyUrl);
     expect(c.supportUrl, d.supportUrl);
+    expect(c.supportEmail, d.supportEmail);
+    expect(c.minSupportedVersion, d.minSupportedVersion);
+    expect(c.latestVersion, d.latestVersion);
+    expect(c.updateUrlIos, d.updateUrlIos);
+    expect(c.reviewPromptEnabled, d.reviewPromptEnabled);
     expect(c.announcement, isNull, reason: 'disabled announcement must not show');
     expect(c.adsEnabled, isFalse);
     for (final id in ['halloween', 'winter']) {
@@ -89,5 +96,14 @@ void main() {
     expect(compareVersions('1.2.10', '1.2.9'), greaterThan(0));
     expect(compareVersions('1.0.0', '1.0.0+5'), 0);
     expect(compareVersions('1.0', '1.0.1'), lessThan(0));
+  });
+
+  test('first launch with no cache and no network runs on the code defaults', () async {
+    SharedPreferences.setMockInitialValues({});
+    final s = RemoteConfigService();
+    await s.init();
+    expect(s.value.miniGameEnabled, RemoteConfig.defaults.miniGameEnabled);
+    expect(s.value.dailyGiftBase, RemoteConfig.defaults.dailyGiftBase);
+    expect(s.value.adsEnabled, isFalse);
   });
 }
