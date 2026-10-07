@@ -6,10 +6,9 @@ import 'needs.dart';
 /// unlock with level. Food is never sold — acorns are only for the closet.
 @immutable
 class Food {
-  const Food(this.id, this.emoji, {this.minLevel = 1, this.tummy = 16, this.fun = 0, this.seasonal});
+  const Food(this.id, {this.minLevel = 1, this.tummy = 16, this.fun = 0, this.seasonal});
 
   final String id;
-  final String emoji;
   final int minLevel;
   final double tummy;
   final double fun;
@@ -40,16 +39,16 @@ class Catalog {
   const Catalog._();
 
   static const foods = <Food>[
-    Food('apple', '🍎', tummy: 18),
-    Food('carrot', '🥕', tummy: 16),
-    Food('corn', '🌽', tummy: 20),
-    Food('lettuce', '🥬', minLevel: 2, tummy: 12, fun: 2),
-    Food('watermelon', '🍉', minLevel: 3, tummy: 22, fun: 6),
-    Food('strawberry', '🍓', minLevel: 4, tummy: 12, fun: 8),
-    Food('cupcake', '🧁', minLevel: 6, tummy: 14, fun: 12),
-    Food('donut', '🍩', minLevel: 8, tummy: 16, fun: 14),
-    Food('pumpkin', '🎃', tummy: 24, fun: 10, seasonal: 'halloween'),
-    Food('cookie', '🍪', tummy: 14, fun: 12, seasonal: 'winter'),
+    Food('apple', tummy: 18),
+    Food('carrot', tummy: 16),
+    Food('corn', tummy: 20),
+    Food('lettuce', minLevel: 2, tummy: 12, fun: 2),
+    Food('watermelon', minLevel: 3, tummy: 22, fun: 6),
+    Food('strawberry', minLevel: 4, tummy: 12, fun: 8),
+    Food('cupcake', minLevel: 6, tummy: 14, fun: 12),
+    Food('donut', minLevel: 8, tummy: 16, fun: 14),
+    Food('pumpkin', tummy: 24, fun: 10, seasonal: 'halloween'),
+    Food('cookie', tummy: 14, fun: 12, seasonal: 'winter'),
   ];
 
   static const cosmetics = <Cosmetic>[

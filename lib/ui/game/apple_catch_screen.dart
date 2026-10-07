@@ -11,6 +11,7 @@ import '../../pet/catalog.dart';
 import '../pig/pig_painter.dart';
 import '../pig/pig_pose.dart';
 import '../room_painter.dart';
+import '../art_icons.dart';
 import '../theme.dart';
 import '../widgets.dart';
 import 'apple_catch_logic.dart';
@@ -186,7 +187,7 @@ class _AppleCatchScreenState extends State<AppleCatchScreen> with SingleTickerPr
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Text('🍎', style: TextStyle(fontSize: 18)),
+                                  const ArtIconView(ArtIcon.apple, size: 22),
                                   const SizedBox(width: 6),
                                   Text(
                                     '${_game.score}',
@@ -253,33 +254,23 @@ class _GamePainter extends CustomPainter {
   final _AppleCatchScreenState s;
   final Stage stage;
   final String? hat, glasses, neck;
-  static final Map<String, TextPainter> _emoji = {};
-
-  TextPainter _tp(String e, double size) {
-    final key = '$e@${size.round()}';
-    return _emoji.putIfAbsent(
-      key,
-      () => TextPainter(
-        text: TextSpan(
-          text: e,
-          style: TextStyle(fontSize: size),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout(),
-    );
-  }
+  static ArtIcon _icon(FallKind k) => switch (k) {
+    FallKind.apple => ArtIcon.apple,
+    FallKind.golden => ArtIcon.star,
+    FallKind.acorn => ArtIcon.acorn,
+    FallKind.bee => ArtIcon.bee,
+  };
 
   @override
   void paint(Canvas canvas, Size size) {
     final g = s._game;
     final itemSize = (size.width * 0.11).clamp(34.0, 56.0);
     for (final it in g.items) {
-      final tp = _tp(it.kind.emoji, itemSize);
       final p = Offset(it.x * size.width, it.y * size.height);
       canvas.save();
       canvas.translate(p.dx, p.dy);
       if (it.kind == FallKind.bee) canvas.rotate(math.sin(it.y * 40) * 0.2);
-      tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
+      ArtIconPainter.paintAt(canvas, _icon(it.kind), Offset(-itemSize / 2, -itemSize / 2), itemSize);
       canvas.restore();
     }
     // Pig
@@ -323,7 +314,10 @@ class _ReadyCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('🍎🍎🍎', style: TextStyle(fontSize: 34)),
+              const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [ArtIconView(ArtIcon.apple, size: 44), ArtIconView(ArtIcon.star, size: 44), ArtIconView(ArtIcon.bee, size: 44)],
+              ),
               const SizedBox(height: 8),
               Text(l.gameTitle, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 8),
@@ -370,9 +364,13 @@ class _ResultCard extends StatelessWidget {
           children: [
             Text(newBest ? l.gameNewBest : l.gameOver, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
             const SizedBox(height: 10),
-            Text(
-              '🍎 $score',
-              style: const TextStyle(fontFamily: 'Fredoka', fontSize: 44, fontWeight: FontWeight.w600, color: AppColors.pinkDeep),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const ArtIconView(ArtIcon.apple, size: 44),
+                const SizedBox(width: 8),
+                Text('$score', style: const TextStyle(fontFamily: 'Fredoka', fontSize: 44, fontWeight: FontWeight.w600, color: AppColors.pinkDeep)),
+              ],
             ),
             Text(l.gameBest(best), style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),

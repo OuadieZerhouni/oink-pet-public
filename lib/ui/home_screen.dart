@@ -16,6 +16,7 @@ import '../pet/catalog.dart';
 import '../pet/needs.dart';
 import '../pet/pet_controller.dart';
 import '../pet/pet_state.dart';
+import 'art_icons.dart';
 import 'closet_screen.dart';
 import 'game/apple_catch_screen.dart';
 import 'names.dart';
@@ -346,34 +347,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (amount == 0) return;
     _sfx.play(Sfx.gift);
     _pig.react(Reaction.happy);
-    await _guardedDialog(() => showDialog<void>(
-      context: context,
-      builder: (ctx) => _CelebrationDialog(
-        icon: const Text('🎁', style: TextStyle(fontSize: 54)),
-        title: l.giftTitle,
-        body: l.giftBody(streak, amount),
-        footer: Row(mainAxisSize: MainAxisSize.min, children: [const AcornIcon(size: 26), const SizedBox(width: 6), Text('+$amount', style: const TextStyle(fontFamily: 'Fredoka', fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.acorn))]),
-        cta: l.giftClaim,
+    await _guardedDialog(
+      () => showDialog<void>(
+        context: context,
+        builder: (ctx) => _CelebrationDialog(
+          icon: const ArtIconView(ArtIcon.gift, size: 72),
+          title: l.giftTitle,
+          body: l.giftBody(streak, amount),
+          footer: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AcornIcon(size: 26),
+              const SizedBox(width: 6),
+              Text(
+                '+$amount',
+                style: const TextStyle(fontFamily: 'Fredoka', fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.acorn),
+              ),
+            ],
+          ),
+          cta: l.giftClaim,
+        ),
       ),
-    ));
+    );
     _sfx.play(Sfx.acorn);
   }
 
   Future<void> _showLevelUp(int level, bool grew) async {
     final l = context.l10n;
     final name = _state.name;
-    final body = !grew
-        ? l.levelUpBody(name)
-        : (_state.stage == Stage.big ? l.grewUpBig(name) : l.grewUpLittle(name));
-    await _guardedDialog(() => showDialog<void>(
-      context: context,
-      builder: (ctx) => _CelebrationDialog(
-        icon: const Text('⭐', style: TextStyle(fontSize: 54)),
-        title: l.levelUpTitle(level),
-        body: body,
-        cta: l.ok,
+    final body = !grew ? l.levelUpBody(name) : (_state.stage == Stage.big ? l.grewUpBig(name) : l.grewUpLittle(name));
+    await _guardedDialog(
+      () => showDialog<void>(
+        context: context,
+        builder: (ctx) =>
+            _CelebrationDialog(icon: const ArtIconView(ArtIcon.star, size: 72), title: l.levelUpTitle(level), body: body, cta: l.ok),
       ),
-    ));
+    );
   }
 
   Future<void> _guardedDialog(Future<void> Function() show) async {
@@ -400,23 +409,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final l = context.l10n;
     final cfg = remote.value;
     if (remote.updateRequired && cfg.updateUrlIos.isNotEmpty) {
-      await _guardedDialog(() => showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(l.updateTitle),
-          content: Text(l.updateBody),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.later)),
-            FilledButton(
-              onPressed: () {
-                launchUrl(Uri.parse(cfg.updateUrlIos), mode: LaunchMode.externalApplication);
-                Navigator.pop(ctx);
-              },
-              child: Text(l.updateCta),
-            ),
-          ],
+      await _guardedDialog(
+        () => showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(l.updateTitle),
+            content: Text(l.updateBody),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.later)),
+              FilledButton(
+                onPressed: () {
+                  launchUrl(Uri.parse(cfg.updateUrlIos), mode: LaunchMode.externalApplication);
+                  Navigator.pop(ctx);
+                },
+                child: Text(l.updateCta),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
       return;
     }
     final ann = cfg.announcement;
@@ -427,21 +438,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (p.getString(key) == ann.id) return;
       if (!mounted) return;
       final lang = Localizations.localeOf(context).languageCode;
-      await _guardedDialog(() => showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(ann.title.resolve(lang)),
-          content: Text(ann.body.resolve(lang)),
-          actions: [
-            if (ann.url.isNotEmpty)
-              TextButton(
-                onPressed: () => launchUrl(Uri.parse(ann.url), mode: LaunchMode.externalApplication),
-                child: const Text('↗'),
-              ),
-            FilledButton(onPressed: () => Navigator.pop(ctx), child: Text(l.ok)),
-          ],
+      await _guardedDialog(
+        () => showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(ann.title.resolve(lang)),
+            content: Text(ann.body.resolve(lang)),
+            actions: [
+              if (ann.url.isNotEmpty)
+                TextButton(
+                  onPressed: () => launchUrl(Uri.parse(ann.url), mode: LaunchMode.externalApplication),
+                  child: const Text('↗'),
+                ),
+              FilledButton(onPressed: () => Navigator.pop(ctx), child: Text(l.ok)),
+            ],
+          ),
         ),
-      ));
+      );
       await p.setString(key, ann.id);
     } catch (_) {}
   }
@@ -449,10 +462,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // ------------------------------------------------------------------ build
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Listenable.merge([_pet, _s.remote]),
-      builder: (context, _) => _build(context),
-    );
+    return ListenableBuilder(listenable: Listenable.merge([_pet, _s.remote]), builder: (context, _) => _build(context));
   }
 
   Widget _build(BuildContext context) {
@@ -475,17 +485,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 child: TweenAnimationBuilder<double>(
                   tween: Tween(end: asleep ? 1 : 0),
                   duration: const Duration(milliseconds: 900),
-                  builder: (context, night, _) => CustomPaint(painter: RoomPainter(st.room, night: night, floorY: floorY)),
+                  builder: (context, night, _) => CustomPaint(
+                    painter: RoomPainter(st.room, night: night, floorY: floorY),
+                  ),
                 ),
               ),
               // Pig area
-              Positioned(
-                left: 0,
-                right: 0,
-                top: pigTop,
-                height: pigH,
-                child: _pigArea(l, st, asleep),
-              ),
+              Positioned(left: 0, right: 0, top: pigTop, height: pigH, child: _pigArea(l, st, asleep)),
               // Top bar + meters
               Positioned(
                 left: 0,
@@ -509,11 +515,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 260),
                   transitionBuilder: (c, a) => SlideTransition(
-                    position: Tween(begin: const Offset(0, 0.4), end: Offset.zero).animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)),
+                    position: Tween(
+                      begin: const Offset(0, 0.4),
+                      end: Offset.zero,
+                    ).animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)),
                     child: FadeTransition(opacity: a, child: c),
                   ),
                   child: switch (_mode) {
-                    _Mode.feed => _FeedTray(key: const ValueKey('feed'), pet: _pet, height: bottom, onClose: _toggleFeed, onDragging: (v) => _pig.anticipating = v),
+                    _Mode.feed => _FeedTray(
+                      key: const ValueKey('feed'),
+                      pet: _pet,
+                      height: bottom,
+                      onClose: _toggleFeed,
+                      onDragging: (v) => _pig.anticipating = v,
+                    ),
                     _Mode.bath => _BathBar(
                       key: const ValueKey('bath'),
                       height: bottom,
@@ -579,7 +594,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           Positioned(
                             left: _sponge!.dx - 26,
                             top: _sponge!.dy - 26,
-                            child: const IgnorePointer(child: Text('🧽', style: TextStyle(fontSize: 46))),
+                            child: const IgnorePointer(child: ArtIconView(ArtIcon.sponge, size: 58)),
                           ),
                       ],
                     ),
@@ -610,7 +625,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     top: math.max(0, earTop - 62),
                     left: 0,
                     right: 0,
-                    child: Center(child: IgnorePointer(child: SpeechBubble(text: _bubble))),
+                    child: Center(
+                      child: IgnorePointer(child: SpeechBubble(text: _bubble)),
+                    ),
                   ),
                 ],
               );
@@ -618,7 +635,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ),
         if (_pet.giftAvailable && !asleep && _mode == _Mode.normal)
-          Positioned(right: 16, top: 52, child: _GiftButton(tooltip: l.giftTooltip, onTap: _claimGift)),
+          Positioned(
+            right: 16,
+            top: 52,
+            child: _GiftButton(tooltip: l.giftTooltip, onTap: _claimGift),
+          ),
       ],
     );
   }
@@ -660,7 +681,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               color: AppColors.pink,
                             ),
                           ),
-                          Text('${st.level}', style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.pinkDeep)),
+                          Text(
+                            '${st.level}',
+                            style: const TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: AppColors.pinkDeep,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -670,8 +699,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 17, color: AppColors.ink)),
-                          Text(stageName(l, st.stage), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.inkSoft)),
+                          Text(
+                            st.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 17, color: AppColors.ink),
+                          ),
+                          Text(
+                            stageName(l, st.stage),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.inkSoft),
+                          ),
                         ],
                       ),
                     ),
@@ -720,18 +759,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          DockButton(icon: Icons.restaurant_rounded, label: l.actFeed, color: AppColors.tummy, onTap: _toggleFeed, enabled: !asleep, highlight: urgent == Need.tummy && !asleep),
-          DockButton(icon: Icons.bubble_chart_rounded, label: l.actBath, color: AppColors.clean, onTap: _toggleBath, enabled: !asleep, highlight: urgent == Need.clean && !asleep),
-          if (_s.remote.value.miniGameEnabled)
-            DockButton(icon: Icons.sports_esports_rounded, label: l.actPlay, color: AppColors.fun, onTap: _play, enabled: !asleep, highlight: urgent == Need.fun && !asleep),
-          DockButton(
-            icon: asleep ? Icons.wb_sunny_rounded : Icons.bedtime_rounded,
-            label: asleep ? l.actWake : l.actSleep,
-            color: AppColors.energy,
-            onTap: _toggleSleep,
-            highlight: (urgent == Need.energy || (_isNight && st.needs.energy < 70)) && !asleep,
-          ),
-          DockButton(icon: Icons.checkroom_rounded, label: l.actCloset, color: AppColors.pink, onTap: _openCloset),
+          for (final b in <Widget>[
+            DockButton(
+              icon: Icons.restaurant_rounded,
+              label: l.actFeed,
+              color: AppColors.tummy,
+              onTap: _toggleFeed,
+              enabled: !asleep,
+              highlight: urgent == Need.tummy && !asleep,
+            ),
+            DockButton(
+              icon: Icons.bubble_chart_rounded,
+              label: l.actBath,
+              color: AppColors.clean,
+              onTap: _toggleBath,
+              enabled: !asleep,
+              highlight: urgent == Need.clean && !asleep,
+            ),
+            if (_s.remote.value.miniGameEnabled)
+              DockButton(
+                icon: Icons.sports_esports_rounded,
+                label: l.actPlay,
+                color: AppColors.fun,
+                onTap: _play,
+                enabled: !asleep,
+                highlight: urgent == Need.fun && !asleep,
+              ),
+            DockButton(
+              icon: asleep ? Icons.wb_sunny_rounded : Icons.bedtime_rounded,
+              label: asleep ? l.actWake : l.actSleep,
+              color: AppColors.energy,
+              onTap: _toggleSleep,
+              highlight: (urgent == Need.energy || (_isNight && st.needs.energy < 70)) && !asleep,
+            ),
+            DockButton(icon: Icons.checkroom_rounded, label: l.actCloset, color: AppColors.pink, onTap: _openCloset),
+          ])
+            Expanded(child: Center(child: b)),
         ],
       ),
     );
@@ -776,7 +839,7 @@ class _FeedTray extends StatelessWidget {
                   data: f,
                   onDragStarted: () => onDragging(false),
                   onDragEnd: (_) => onDragging(false),
-                  feedback: Material(color: Colors.transparent, child: Text(f.emoji, style: const TextStyle(fontSize: 54))),
+                  feedback: ArtIconView(artIconForFood(f.id), size: 64),
                   childWhenDragging: Opacity(opacity: 0.35, child: tile),
                   child: tile,
                 );
@@ -816,11 +879,25 @@ class _FoodTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Opacity(opacity: locked ? 0.35 : 1, child: Text(food.emoji, style: const TextStyle(fontSize: 38))),
+            Opacity(opacity: locked ? 0.35 : 1, child: ArtIconView(artIconForFood(food.id), size: 46)),
             const SizedBox(height: 2),
             locked
-                ? Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.lock_rounded, size: 13, color: AppColors.inkSoft), Text(lockLabel, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.inkSoft))])
-                : Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.ink)),
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.lock_rounded, size: 13, color: AppColors.inkSoft),
+                      Text(
+                        lockLabel,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.inkSoft),
+                      ),
+                    ],
+                  )
+                : Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.ink),
+                  ),
           ],
         ),
       ),
@@ -854,14 +931,22 @@ class _BathBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l.bathHint, style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.ink)),
-                const SizedBox(height: 10),
+                Flexible(
+                  child: Text(
+                    l.bathHint,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 15, color: AppColors.ink),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: TweenAnimationBuilder<double>(
                     tween: Tween(end: clean / 100),
                     duration: const Duration(milliseconds: 250),
-                    builder: (context, v, _) => LinearProgressIndicator(value: v, minHeight: 12, backgroundColor: Colors.white, color: AppColors.clean),
+                    builder: (context, v, _) =>
+                        LinearProgressIndicator(value: v, minHeight: 12, backgroundColor: Colors.white, color: AppColors.clean),
                   ),
                 ),
               ],
@@ -935,7 +1020,7 @@ class _GiftButtonState extends State<_GiftButton> with SingleTickerProviderState
                 border: Border.all(color: AppColors.sun, width: 3),
                 boxShadow: const [BoxShadow(color: Color(0x40FFB300), blurRadius: 14, offset: Offset(0, 4))],
               ),
-              child: const Text('🎁', style: TextStyle(fontSize: 32)),
+              child: const ArtIconView(ArtIcon.gift, size: 40),
             ),
           ),
         ),
@@ -967,7 +1052,10 @@ class _CelebrationDialog extends StatelessWidget {
             Text(body, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
             if (footer != null) ...[const SizedBox(height: 14), footer!],
             const SizedBox(height: 20),
-            SizedBox(width: double.infinity, child: FilledButton(onPressed: () => Navigator.pop(context), child: Text(cta))),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(onPressed: () => Navigator.pop(context), child: Text(cta)),
+            ),
           ],
         ),
       ),

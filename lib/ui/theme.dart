@@ -96,11 +96,17 @@ class SoftCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
+    // Shadow only — the colour lives on the Material below, so ListTiles
+    // inside a card keep their ink splashes.
     decoration: BoxDecoration(
-      color: color ?? AppColors.card,
       borderRadius: BorderRadius.circular(radius),
       boxShadow: const [BoxShadow(color: Color(0x1A8A3A5A), blurRadius: 16, offset: Offset(0, 6))],
     ),
-    child: Padding(padding: padding, child: child),
+    child: Material(
+      color: color ?? AppColors.card,
+      borderRadius: BorderRadius.circular(radius),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(padding: padding, child: child),
+    ),
   );
 }

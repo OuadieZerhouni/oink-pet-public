@@ -11,6 +11,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:oink_pet/pet/catalog.dart';
+import 'package:oink_pet/ui/art_icons.dart';
 import 'package:oink_pet/ui/pig/pig_painter.dart';
 import 'package:oink_pet/ui/pig/pig_pose.dart';
 
@@ -56,6 +57,20 @@ void main() {
         PigPainter(pose: PigPose(), geometry: g, hat: 'witch'),
         PigPainter(pose: PigPose(), geometry: g, hat: 'santa'),
       ]);
+      {
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
+        const cell = 110.0;
+        const cols = 8;
+        final rows = (ArtIcon.values.length / cols).ceil();
+        canvas.drawRect(const Rect.fromLTWH(0, 0, cell * cols, 300), Paint()..color = const Color(0xFFFFF6EC));
+        for (var i = 0; i < ArtIcon.values.length; i++) {
+          ArtIconPainter.paintAt(canvas, ArtIcon.values[i], Offset((i % cols) * cell + 10, (i ~/ cols) * cell + 10), 90);
+        }
+        final img = await recorder.endRecording().toImage((cell * cols).round(), (cell * rows).round());
+        final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
+        File('build/preview/icons.png').writeAsBytesSync(bytes!.buffer.asUint8List());
+      }
       await _dump('pig_stages', [
         for (final s in Stage.values) PigPainter(pose: PigPose(), geometry: PigGeometry.forStage(s)),
       ]);

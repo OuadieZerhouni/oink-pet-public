@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/app_services.dart';
 import '../l10n/l10n.dart';
 import '../pet/catalog.dart';
+import 'art_icons.dart';
 import 'names.dart';
 import 'theme.dart';
 
@@ -85,7 +86,7 @@ class _StatsSheet extends StatelessWidget {
               SoftCard(
                 child: Row(
                   children: [
-                    Text(favFood.emoji, style: const TextStyle(fontSize: 32)),
+                    ArtIconView(artIconForFood(favFood.id), size: 40),
                     const SizedBox(width: 12),
                     Expanded(child: Text(l.statsFavorite, style: Theme.of(context).textTheme.bodyMedium)),
                     Text(foodName(l, favFood.id), style: Theme.of(context).textTheme.titleMedium),

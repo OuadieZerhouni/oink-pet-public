@@ -2,13 +2,12 @@ import 'dart:math' as math;
 
 /// What can fall. Points are added to the score; bees cost a heart.
 enum FallKind {
-  apple('🍎', 1),
-  golden('🌟', 3),
-  acorn('🌰', 2),
-  bee('🐝', 0);
+  apple(1),
+  golden(3),
+  acorn(2),
+  bee(0);
 
-  const FallKind(this.emoji, this.points);
-  final String emoji;
+  const FallKind(this.points);
   final int points;
 }
 

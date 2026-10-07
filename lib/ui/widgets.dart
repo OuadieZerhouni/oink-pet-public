@@ -24,10 +24,14 @@ class _AcornPainter extends CustomPainter {
     c.drawOval(Rect.fromLTWH(w * 0.3, w * 0.42, w * 0.16, w * 0.3), Paint()..color = const Color(0x55FFFFFF));
     final cap = RRect.fromRectAndRadius(Rect.fromLTWH(w * 0.12, w * 0.2, w * 0.76, w * 0.24), Radius.circular(w * 0.12));
     c.drawRRect(cap, Paint()..color = const Color(0xFF7A4A24));
-    c.drawLine(Offset(w * 0.5, w * 0.2), Offset(w * 0.58, w * 0.04), Paint()
-      ..color = const Color(0xFF7A4A24)
-      ..strokeWidth = w * 0.09
-      ..strokeCap = StrokeCap.round);
+    c.drawLine(
+      Offset(w * 0.5, w * 0.2),
+      Offset(w * 0.58, w * 0.04),
+      Paint()
+        ..color = const Color(0xFF7A4A24)
+        ..strokeWidth = w * 0.09
+        ..strokeCap = StrokeCap.round,
+    );
   }
 
   @override
@@ -152,13 +156,25 @@ class _NeedMeterState extends State<NeedMeter> with SingleTickerProviderStateMix
                 curve: Curves.easeOutCubic,
                 builder: (context, t, _) => CustomPaint(
                   painter: _RingPainter(t, color),
-                  child: Center(child: Icon(NeedMeter.iconFor(widget.need), color: t < Needs.low / 100 ? AppColors.danger : color, size: 22)),
+                  child: Center(
+                    child: Icon(NeedMeter.iconFor(widget.need), color: t < Needs.low / 100 ? AppColors.danger : color, size: 22),
+                  ),
                 ),
               ),
             ),
           ),
           const SizedBox(height: 3),
-          Text(widget.label, style: const TextStyle(fontFamily: 'Fredoka', fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.ink)),
+          SizedBox(
+            width: 70,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                widget.label,
+                maxLines: 1,
+                style: const TextStyle(fontFamily: 'Fredoka', fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.ink),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -266,6 +282,11 @@ class DockButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, box) => _build(context, box.maxWidth.isFinite ? box.maxWidth : 70));
+  }
+
+  Widget _build(BuildContext context, double maxWidth) {
+    final d = (maxWidth - 6).clamp(44.0, 58.0);
     return Semantics(
       button: true,
       enabled: enabled,
@@ -281,18 +302,34 @@ class DockButton extends StatelessWidget {
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                width: 58,
-                height: 58,
+                width: d,
+                height: d,
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: highlight ? 4 : 3),
-                  boxShadow: [BoxShadow(color: color.withValues(alpha: highlight ? 0.6 : 0.35), blurRadius: highlight ? 16 : 10, offset: const Offset(0, 4))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withValues(alpha: highlight ? 0.6 : 0.35),
+                      blurRadius: highlight ? 16 : 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: Icon(icon, color: Colors.white, size: 28),
+                child: Icon(icon, color: Colors.white, size: d * 0.48),
               ),
               const SizedBox(height: 4),
-              Text(label, style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.ink)),
+              SizedBox(
+                width: maxWidth,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.ink),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

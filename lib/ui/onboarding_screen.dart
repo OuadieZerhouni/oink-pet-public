@@ -23,7 +23,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _name = TextEditingController(text: '');
   int _step = 0;
 
-  static const _suggestions = ['Oinky', 'Truffle', 'Peanut', 'Muffin', 'Petunia', 'Waffles', 'Biscuit', 'Hamlet', 'Pumpkin', 'Mochi'];
+  static const _suggestions = ['Oinky', 'Truffle', 'Peanut', 'Muffin', 'Petunia', 'Waffles'];
 
   @override
   void dispose() {
@@ -62,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 // Pig stage
                 Expanded(
-                  flex: compact ? 4 : 6,
+                  flex: _step == 1 ? (compact ? 2 : 4) : (compact ? 4 : 6),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(40, 12, 40, 0),
                     child: Stack(
@@ -81,14 +81,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         ),
                         if (_step == 0)
-                          const Positioned(left: 0, right: 0, bottom: 0, height: 92, child: IgnorePointer(child: CustomPaint(painter: _BasketPainter()))),
+                          const Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            height: 92,
+                            child: IgnorePointer(child: CustomPaint(painter: _BasketPainter())),
+                          ),
                       ],
                     ),
                   ),
                 ),
                 // Card
                 Expanded(
-                  flex: compact ? 6 : 4,
+                  flex: _step == 1 ? (compact ? 8 : 6) : (compact ? 6 : 4),
                   child: Container(
                     width: double.infinity,
                     decoration: const BoxDecoration(
@@ -120,56 +126,68 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 10),
             Text(l.onbHelloBody, textAlign: TextAlign.center, style: t.bodyLarge),
             const Spacer(),
-            SizedBox(width: double.infinity, child: FilledButton(onPressed: _next, child: Text(l.onbHelloCta))),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(onPressed: _next, child: Text(l.onbHelloCta)),
+            ),
           ],
         );
       case 1:
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(l.onbNameTitle, textAlign: TextAlign.center, style: t.headlineSmall),
-              const SizedBox(height: 14),
-              TextField(
-                controller: _name,
-                maxLength: 16,
-                textAlign: TextAlign.center,
-                textCapitalization: TextCapitalization.words,
-                style: const TextStyle(fontFamily: 'Fredoka', fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.ink),
-                decoration: InputDecoration(
-                  hintText: PetState.defaultName,
-                  counterText: '',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
-                ),
-                onChanged: (_) => setState(() {}),
-                onSubmitted: (_) => _next(),
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: [
-                  for (final n in _suggestions)
-                    ChoiceChip(
-                      label: Text(n),
-                      selected: _name.text.trim() == n,
-                      onSelected: (_) {
-                        AppScope.of(context).sfx.play(Sfx.tap);
-                        setState(() => _name.text = n);
-                      },
-                      selectedColor: AppColors.pinkSoft,
-                      backgroundColor: Colors.white,
-                      side: BorderSide.none,
-                      labelStyle: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w500, color: AppColors.ink),
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(l.onbNameTitle, textAlign: TextAlign.center, style: t.headlineSmall),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: _name,
+                      maxLength: 16,
+                      textAlign: TextAlign.center,
+                      textCapitalization: TextCapitalization.words,
+                      style: const TextStyle(fontFamily: 'Fredoka', fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.ink),
+                      decoration: InputDecoration(
+                        hintText: PetState.defaultName,
+                        counterText: '',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+                      ),
+                      onChanged: (_) => setState(() {}),
+                      onSubmitted: (_) => _next(),
                     ),
-                ],
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        for (final n in _suggestions)
+                          ChoiceChip(
+                            label: Text(n),
+                            selected: _name.text.trim() == n,
+                            onSelected: (_) {
+                              AppScope.of(context).sfx.play(Sfx.tap);
+                              setState(() => _name.text = n);
+                            },
+                            selectedColor: AppColors.pinkSoft,
+                            backgroundColor: Colors.white,
+                            side: BorderSide.none,
+                            labelStyle: const TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w500, color: AppColors.ink),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 18),
-              SizedBox(width: double.infinity, child: FilledButton(onPressed: _next, child: Text(l.onbNameCta))),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(onPressed: _next, child: Text(l.onbNameCta)),
+            ),
+          ],
         );
       default:
         final tips = <(IconData, Color, String)>[
@@ -205,7 +223,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            SizedBox(width: double.infinity, child: FilledButton(onPressed: _next, child: Text(l.onbGo))),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(onPressed: _next, child: Text(l.onbGo)),
+            ),
           ],
         );
     }
