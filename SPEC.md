@@ -28,7 +28,7 @@ mechanics and a different art style (soft vector, not ink or pixel).
 
 | Screen | Purpose | Entry |
 | --- | --- | --- |
-| Onboarding | piglet peeks out of a basket, you name it, three quick tips | first launch only |
+| Onboarding | piglet peeks out of a basket, you name it, four quick tips | first launch only |
 | Home | the only main screen: top bar, need meters, room + pig, action dock, speech bubble, daily gift | launch |
 | Feed tray | sheet of foods dragged onto the pig's mouth | dock → Feed |
 | Bath mode | scrub mud with a sponge, rinse with the shower | dock → Bath |
@@ -43,21 +43,21 @@ mechanics and a different art style (soft vector, not ink or pixel).
 ### F1 — Onboarding
 
 **Acceptance criteria**
-- [ ] On first launch the piglet peeks out of a basket and a name field is shown, prefilled with "Oinky", with suggestion chips that fill the field when tapped.
-- [ ] Confirming the name shows three quick tips, then lands on Home with the pig named as entered.
-- [ ] Onboarding never appears again on later launches (persisted).
+- [x] On first launch the piglet peeks out of a basket, then a name step offers suggestion chips that fill the field when tapped; an empty name becomes "Oinky" (shown as the hint).
+- [x] Confirming the name shows four quick tips (Feed, Bath, Love, Grow), then lands on Home with the pig named as entered.
+- [x] Onboarding never appears again on later launches (persisted).
 
 ### F2 — Home and the painted pig
 
 The pig is drawn procedurally (`PigPainter`), breathes and blinks, and its eyes follow the finger.
 
 **Acceptance criteria**
-- [ ] Top bar shows the pig's name, a level ring and the acorn count; four meters show Tummy, Clean, Fun and Energy (0–100).
-- [ ] The bottom dock has Feed, Bath, Play, Sleep and Closet; each opens its mode.
-- [ ] A speech bubble states mood or the lowest need ("I'm hungry!") and stays anchored above the pig.
-- [ ] Idle life: breathing and blinking; the pupils track a finger held on the screen.
-- [ ] Growth stage is visible: piglet (levels 1–4), little pig (5–9), big pig (10+) render at different sizes.
-- [ ] Portrait iPhone only; safe areas respected; layout holds on a 320×568 phone at 1.6× text scale with no overflow.
+- [x] Top bar shows the pig's name, a level ring and the acorn count; four meters show Tummy, Clean, Fun and Energy (0–100).
+- [x] The bottom dock has Feed, Bath, Play, Sleep and Closet; each opens its mode.
+- [x] A speech bubble states mood or the most urgent need (e.g. "My tummy is rumbling…") and stays anchored above the pig.
+- [x] Idle life: breathing and blinking; the pupils track a finger held on the screen.
+- [x] Growth stage is visible: piglet (levels 1–4), little pig (5–9), big pig (10+) render with different body proportions.
+- [x] Portrait iPhone only; safe areas respected; layout holds on a 320×568 phone at 1.6× text scale with no overflow.
 
 ### F3 — Pig interactions (gesture zones)
 
@@ -70,81 +70,81 @@ The pig is drawn procedurally (`PigPainter`), breathes and blinks, and its eyes 
 | Tail | tap | the tail spins, surprised "oink?" |
 
 **Acceptance criteria**
-- [ ] Each zone in the table produces its listed reaction and sound.
-- [ ] Rubbing the belly back and forth raises Fun.
-- [ ] A sleeping pig grumbles and stays asleep on any touch.
-- [ ] Each reaction gives a light haptic when haptics are on.
+- [x] Each zone in the table produces its listed reaction and sound.
+- [x] Rubbing the belly back and forth raises Fun.
+- [x] Tapping a sleeping pig makes it grumble ("Five more minutes…"); it stays asleep.
+- [x] Each reaction gives a light haptic when haptics are on.
 
 ### F4 — Feed
 
 **Acceptance criteria**
-- [ ] The Feed tray lists foods; basic foods are free and unlimited, treats show a lock with their unlock level.
-- [ ] Dragging a food onto the pig's mouth makes it munch, raises Tummy and grants XP.
-- [ ] With a full tummy the pig refuses: "I'm full!" and a head shake, and Tummy does not change.
-- [ ] The diary records the favourite (most-eaten) food.
+- [x] The Feed tray lists foods; basic foods are free and unlimited, treats show a lock with their unlock level.
+- [x] Dragging a food onto the pig's mouth makes it munch, raises Tummy and grants XP.
+- [x] With a full tummy (96+) the pig refuses: "I'm full!" and a head shake, and Tummy does not change.
+- [x] The diary (tap the name in the top bar) shows the favourite (most-eaten) food.
 
 ### F5 — Bath
 
 **Acceptance criteria**
-- [ ] Entering Bath shows mud spots on the pig in proportion to how low Clean is.
-- [ ] Rubbing the sponge over the pig makes bubbles and removes spots.
-- [ ] The shower rinses the bubbles; the pig sparkles when clean and Clean is raised.
+- [x] Entering Bath shows mud spots on the pig in proportion to how low Clean is.
+- [x] Rubbing the sponge over the pig makes bubbles and removes spots.
+- [x] The shower rinses the bubbles; the pig sparkles when clean and Clean is raised.
 
 ### F6 — Play: Apple Catch
 
 **Acceptance criteria**
-- [ ] Dragging moves the pig left and right to catch falling apples, stars and acorns; bees must be dodged.
-- [ ] A round lasts 45 s with a visible countdown, then shows a result.
-- [ ] The result pays acorns of score ÷ 3 and raises Fun.
+- [x] Dragging moves the pig left and right to catch falling apples, stars and acorns; bees must be dodged.
+- [x] A round lasts 45 s with a visible countdown, then shows a result.
+- [x] The result pays acorns of score ÷ 3 (capped at 40 per round) and raises Fun by 25. Three bee stings end a round early.
 
 ### F7 — Sleep
 
 **Acceptance criteria**
-- [ ] Sleep dims the lights; the pig sleeps with Zzz and soft snores; Energy refills, including while the app is closed.
-- [ ] Tapping the moon wakes the pig.
-- [ ] Between 22:00 and 07:00 local the awake pig says it is sleepy.
+- [x] Sleep dims the lights; the pig sleeps with Zzz and soft snores; Energy refills, including while the app is closed.
+- [x] Tapping the moon (or the dock's Wake button) wakes the pig.
+- [x] Between 22:00 and 07:00 local, an awake pig with Energy below 70 and no urgent need says it is sleepy.
 
 ### F8 — Needs, XP and acorns (pure Dart, unit-tested)
 
 **Acceptance criteria**
-- [ ] Needs decay per hour (tummy −6, clean −3, fun −5, energy −4 awake / +15 asleep), tunable by remote config.
-- [ ] Elapsed time is applied on resume with an injectable clock; needs floor at 5 and the pig never dies.
-- [ ] Level *n* needs `20 + 12·n` XP; levelling up celebrates and may unlock items.
-- [ ] Daily gift of 5 acorns + streak bonus (streak capped at 7), claimable once per local day from a button on Home.
-- [ ] Caring for a need that is low pays a small acorn reward.
-- [ ] Acorns are spent only in the Closet; there is no real money anywhere.
+- [x] Needs decay per hour (tummy −6, clean −3, fun −5, energy −4 awake / +15 asleep), tunable by remote config.
+- [x] Elapsed time is applied on resume with an injectable clock; needs floor at 5 and the pig never dies.
+- [x] Level *n* needs `20 + 12·n` XP; levelling up celebrates with a sound, a reaction and a level-up dialog.
+- [x] Daily gift of 5 acorns + streak bonus (streak capped at 7), claimable once per local day from a button on Home.
+- [x] Feeding or bathing when that need is low pays a small acorn bonus.
+- [x] Acorns are spent only in the Closet; there is no real money anywhere.
 
 ### F9 — Closet
 
 **Acceptance criteria**
-- [ ] Tabs for Hats, Glasses, Neck and Rooms; each item is locked by level or by an acorn price.
-- [ ] Buying deducts acorns; items cannot be bought without enough acorns.
-- [ ] Equip and unequip with a live preview on the pig; a room changes the Home background.
-- [ ] Seasonal items appear or hide by remote config.
+- [x] Tabs for Hats, Glasses, Neck and Rooms; each item is locked by level or by an acorn price.
+- [x] Buying deducts acorns; items cannot be bought without enough acorns.
+- [x] Equip and unequip with a live preview on the pig; a room changes the Home background.
+- [x] Seasonal items appear or hide by remote config.
 
 ### F10 — Settings and persistence
 
 **Acceptance criteria**
-- [ ] Sound and haptics toggles take effect immediately and persist.
-- [ ] Rename pig, privacy, support and about entries work.
-- [ ] Start over asks for confirmation, then returns to onboarding with fresh state.
-- [ ] All state is one versioned JSON blob in shared_preferences; corrupt data falls back to safe defaults without crashing.
+- [x] Sound and haptics toggles take effect immediately and persist.
+- [x] Rename pig, privacy, support and About entries work.
+- [x] Start over asks for confirmation, then returns to onboarding with fresh state.
+- [x] Pet state is one versioned JSON blob in shared_preferences (settings and the config cache are separate keys); corrupt data falls back to safe defaults without crashing.
 
 ### F11 — Remote config
 
 URL: `https://raw.githubusercontent.com/OuadieZerhouni/app-configs/main/oink-pet/config.json`. See `docs/REMOTE_CONFIG.md`.
 
 **Acceptance criteria**
-- [ ] Every key has a code default; the published JSON equals the code defaults.
-- [ ] Malformed or out-of-range values fall back or are clamped.
-- [ ] First launch works with no network.
+- [x] Every key has a code default; the published JSON equals the code defaults.
+- [x] Malformed or out-of-range values fall back or are clamped.
+- [x] First launch works with no network.
 
 ### F12 — Quality bar
 
 **Acceptance criteria**
-- [ ] 60 fps idle animation with capped particle counts.
-- [ ] Sound respects the silent switch (ambient session) and does not stop other audio.
-- [ ] Unit, widget and pixel tests cover every system and every user flow; `flutter analyze` is clean and `flutter test` passes.
+- [x] 60 fps idle animation with capped particle counts.
+- [x] Sound respects the silent switch (ambient session) and does not stop other audio.
+- [x] Unit, widget and pixel tests cover every system and every user flow; `flutter analyze` is clean and `flutter test` passes.
 
 ## Non-goals
 
