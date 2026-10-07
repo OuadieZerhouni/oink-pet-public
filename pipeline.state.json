@@ -2,11 +2,11 @@
   "ship": {
     "at": "2026-10-07T14:16:25",
     "done": true,
-    "note": "1.0.0 (1) uploaded 2026-10-07 via release_local.py"
+    "note": "1.0.0 (2) uploaded 2026-10-07 (new icon); build 1 replaced"
   },
   "submit": {
     "at": "2026-10-07T16:51:47",
     "done": true,
-    "note": "1.0.0 (1) submitted 2026-10-07, WAITING_FOR_REVIEW, release AFTER_APPROVAL"
+    "note": "1.0.0 (2) resubmitted 2026-10-07 with new icon, WAITING_FOR_REVIEW, release AFTER_APPROVAL"
   }
 }
