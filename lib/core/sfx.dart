@@ -89,6 +89,9 @@ class SfxPlayer {
     try {
       await _configureSession();
       if (!_soloud.isInitialized) await _soloud.init(bufferSize: 1024);
+      // flutter_soloud 5 stops the output device after 500 ms of silence; keep
+      // it running (4.x behaviour) so a tap's sound has no restart latency.
+      _soloud.setAudioDeviceIdleTimeout(null);
       for (final names in _files.values) {
         for (final n in names) {
           try {
